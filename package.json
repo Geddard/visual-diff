@@ -8,8 +8,7 @@
     "build": "webpack --mode production",
     "elec": "electron ."
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Javier Bures",
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",

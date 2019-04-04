@@ -1,9 +1,11 @@
+const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
+  entry: path.resolve(__dirname, "src/index.jsx"),
   optimization: {
     splitChunks: {
       cacheGroups: {
