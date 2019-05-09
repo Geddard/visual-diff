@@ -1,60 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import io from 'socket.io-client';
 
 const App: React.FC = () => {
-  const [imageName, setImageName] = useState("example");
-  const [imageUrl, setImageUrl] = useState("example");
+  const [imageName, setImageName] = useState("frontpage");
+  const [imageUrl, setImageUrl] = useState("www.gog.com");
+  const [lastImage, setLastImage] = useState("");
   const [isDone, setIsDone] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const socket = io("http://localhost");
   socket.connect();
 
   socket.on("done", () => {
     setIsDone(true);
+    setLoading(false);
+    setLastImage(imageName);
   });
 
   const shoot = async () => {
     setIsDone(false);
+    setLoading(true);
     socket.emit("shoot", {imageName, imageUrl});
   };
 
-  const renderlastImage = () => {
+  const renderLastImage = () => {
     if (isDone) {
-      return <img src={`/${imageName}.png`} alt="witcher"/>
+      return <img src={`/${lastImage}.png`} alt="witcher"/>
     }
   };
 
-  return (
-    <div className="App">
-      <header className="App-header">
-
-        <img src={logo} className="App-logo" alt="logo" />
-
-        <label htmlFor="imgName">Image Name</label>
+  const renderInput = (title: string, value: string, setter: Dispatch<React.SetStateAction<string>>) => {
+    return (
+      <div className="field-container">
+        <label className="input-label" htmlFor="imgName">{title}</label>
         <input
+          className="input-box"
           id="imgName"
-          value={imageName}
+          value={value}
           type="text"
-          onChange={e => setImageName(e.target.value)}
+          onChange={e => setter(e.target.value)}
         />
+      </div>
+    );
+  }
 
-        <label htmlFor="imgUrl">Image Url</label>
-        <input
-          id="imgUrl"
-          value={imageUrl}
-          type="text"
-          onChange={e => setImageUrl(e.target.value)}
-        />
-        <br/>
-        <button onClick={shoot}>SHOOT</button>
+  return (
+    <div className="app">
+      <div className="app-header">
 
-        {isDone ? <p>Done!</p> : null}
+        <img src={logo} className="app-logo" alt="logo" />
 
-        {renderlastImage()}
+        <div className="app-form">
 
-      </header>
+          {renderInput("Image Name", imageName, setImageName)}
+          {renderInput("Image Url", imageUrl, setImageUrl)}
+
+          <br/>
+          <button onClick={shoot}>SHOOT</button>
+
+          {loading ? <p className="loading" /> : null}
+
+          {isDone ? <p>Done!</p> : null}
+
+          {renderLastImage()}
+        </div>
+
+      </div>
     </div>
   );
 }
