@@ -52,9 +52,7 @@ const App: React.FC = () => {
 
         {isDone ? <p>Done!</p> : null}
 
-        {
-          renderlastImage()
-        }
+        {renderlastImage()}
 
       </header>
     </div>
