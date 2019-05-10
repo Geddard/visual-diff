@@ -6,6 +6,8 @@ import io from 'socket.io-client';
 const App: React.FC = () => {
   const [imageName, setImageName] = useState("frontpage");
   const [imageUrl, setImageUrl] = useState("www.gog.com");
+  const [hoverElClassName, setHoverElClassName] = useState("");
+  const [clickElClassName, setClickElClassName] = useState("");
   const [lastImage, setLastImage] = useState("");
   const [isDone, setIsDone] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,20 @@ const App: React.FC = () => {
   const shoot = async () => {
     setIsDone(false);
     setLoading(true);
-    socket.emit("shoot", {imageName, imageUrl});
+    const config = {
+      imageName,
+      imageUrl
+    };
+
+    if (hoverElClassName !== "") {
+      Object.assign(config, {hoverElClassName});
+    }
+
+    if (clickElClassName !== "") {
+      Object.assign(config, {clickElClassName});
+    }
+
+    socket.emit("shoot", config);
   };
 
   const renderLastImage = () => {
@@ -56,9 +71,11 @@ const App: React.FC = () => {
 
           {renderInput("Image Name", imageName, setImageName)}
           {renderInput("Image Url", imageUrl, setImageUrl)}
+          {renderInput("(Optional) Hover element", hoverElClassName, setHoverElClassName)}
+          {renderInput("(Optional) Click element", clickElClassName, setClickElClassName)}
 
           <br/>
-          <button onClick={shoot}>SHOOT</button>
+          <button onClick={shoot}>Take screenshot</button>
 
           {loading ? <p className="loading" /> : null}
 
