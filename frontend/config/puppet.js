@@ -1,9 +1,11 @@
-const pptr = require("puppeteer");
+const pptr = require('puppeteer');
 const app = require('http').createServer();
 const io = require('socket.io')(app);
-const freeze = require("./util/freeze");
-const blockImages = require("./util/blockImages");
-const fs = require("fs");
+const freeze = require('./util/freeze');
+const blockImages = require('./util/blockImages');
+const fs = require('fs');
+const PNG = require('pngjs').PNG;
+const pixelmatch = require('pixelmatch');
 
 app.listen(80);
 
@@ -34,16 +36,16 @@ const shoot = async (config, socket) => {
     await page.screenshot({path: `./public/${config.imageName}.png`});
     await browser.close();
 
-    socket.emit("done");
+    socket.emit('done');
 };
 
 io.on('connection', (socket) => {
-    socket.on("shoot", (config) => {
+    socket.on('shoot', (config) => {
         shoot(config, socket);
     });
 
-    socket.on("getImages", () => {
-        fs.readdir("./public", (error, files) => {
+    socket.on('getImages', () => {
+        fs.readdir('./public', (error, files) => {
             const images = [];
 
             files.forEach(file => {
@@ -52,7 +54,20 @@ io.on('connection', (socket) => {
                 }
             });
 
-            socket.emit("imagesReady", images);
+            socket.emit('imagesReady', images);
         });
+    });
+
+    socket.on('compare', (sourceUrl, compareUrl) => {
+        const img1 = PNG.sync.read(fs.readFileSync(`./public/${sourceUrl}`));
+        const img2 = PNG.sync.read(fs.readFileSync(`./public/${compareUrl}`));
+        const {width, height} = img1;
+        const diff = new PNG({width, height});
+
+        pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
+
+        fs.writeFileSync(`./public/${sourceUrl.replace('.png', '')}-diff.png`, PNG.sync.write(diff));
+
+        socket.emit('diffReady')
     });
 });

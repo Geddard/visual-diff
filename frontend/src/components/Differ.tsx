@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import io from 'socket.io-client';
 import without from "lodash-es/without";
+import remove from "lodash-es/remove";
 
 import "./Differ.css";
 
@@ -9,14 +10,63 @@ import Select from "./Select";
 const Differ: React.FC = () => {
   const [sourceSelected, setSourceSelected] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
+
   const [compareSelected, setCompareSelected] = useState(false);
   const [compareUrl, setCompareUrl] = useState("");
+
+  const [diffReady, setDiffReady] = useState(false);
+
   const [imagesReady, setImagesReady] = useState(false);
   const [imagesList, setImagesList] = useState();
 
   const socket = io("http://localhost");
   socket.connect();
   socket.emit("getImages");
+
+  const renderContent = () => {
+    let content = null;
+
+    if (diffReady) {
+      content = renderImg(`${sourceUrl.replace(".png", "")}-diff.png`);
+    } else {
+      content = (
+        <div className="differ-form">
+          {renderSourceSelector()}
+          {renderDiffBtn()}
+          {renderCompareTo()}
+        </div>
+      );
+    }
+
+    return content;
+  }
+
+  const renderSourceSelector = () => {
+    return (
+      <div className="source-selector">
+        <p>Source Image</p>
+        {renderSourceList()}
+        {sourceSelected ? renderImg(sourceUrl) : null}
+      </div>
+    );
+  };
+
+  const renderDiffBtn = () => {
+    if (sourceSelected && compareSelected) {
+      return <button className="diff-btn" onClick={() => doDiff()}>Diff it</button>
+    }
+  }
+
+  const handleDiffReady = () => {
+    setDiffReady(true);
+    socket.close();
+  }
+
+  const doDiff = () => {
+    socket.connect();
+    socket.emit("compare", sourceUrl, compareUrl);
+    socket.on("diffReady", handleDiffReady);
+  }
 
   const renderCompareTo = () => {
     if (sourceSelected) {
@@ -42,8 +92,10 @@ const Differ: React.FC = () => {
 
   const handleImagesReady = (images: string[]) => {
     setImagesReady(true);
-    setImagesList(images);
-  }
+    setImagesList(remove(images, (image: string) => {
+      return image.indexOf("diff") === -1;
+    }));
+  };
 
   socket.on("imagesReady", handleImagesReady);
 
@@ -73,16 +125,7 @@ const Differ: React.FC = () => {
     return <img className="differ__img-displayed" src={`/${img}`} alt={img}/>
   }
 
-  return (
-    <div className="differ-form">
-      <div className="source-selector">
-        <p>Source Image</p>
-        {renderSourceList()}
-        {sourceSelected ? renderImg(sourceUrl) : null}
-      </div>
-      {renderCompareTo()}
-    </div>
-  );
+  return renderContent();
 }
 
 export default Differ;
