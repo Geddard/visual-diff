@@ -2,6 +2,7 @@ import React, { useState, Dispatch } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import io from 'socket.io-client';
+import Input from "./components/Input";
 
 const App: React.FC = () => {
   const [imageName, setImageName] = useState("frontpage");
@@ -46,21 +47,6 @@ const App: React.FC = () => {
     }
   };
 
-  const renderInput = (title: string, value: string, setter: Dispatch<React.SetStateAction<string>>) => {
-    return (
-      <div className="field-container">
-        <label className="input-label" htmlFor="imgName">{title}</label>
-        <input
-          className="input-box"
-          id="imgName"
-          value={value}
-          type="text"
-          onChange={e => setter(e.target.value)}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="app">
       <div className="app-header">
@@ -69,12 +55,13 @@ const App: React.FC = () => {
 
         <div className="app-form">
 
-          {renderInput("Image Name", imageName, setImageName)}
-          {renderInput("Image Url", imageUrl, setImageUrl)}
-          {renderInput("(Optional) Hover element", hoverElClassName, setHoverElClassName)}
-          {renderInput("(Optional) Click element", clickElClassName, setClickElClassName)}
+          <Input title="Image Name" value={imageName} setter={setImageName}/>
+          <Input title="Image Url" value={imageUrl} setter={setImageUrl}/>
+          <Input title="(Optional) Hover element" value={hoverElClassName} setter={setHoverElClassName}/>
+          <Input title="(Optional) Click element" value={clickElClassName} setter={setClickElClassName}/>
 
           <br/>
+
           <button onClick={shoot}>Take screenshot</button>
 
           {loading ? <p className="loading" /> : null}
@@ -86,7 +73,6 @@ const App: React.FC = () => {
 
       </div>
     </div>
-  );
-}
+)};
 
 export default App;

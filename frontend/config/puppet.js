@@ -31,8 +31,8 @@ const shoot = async (config, socket) => {
     }
 
     await page.screenshot({path: `./public/${config.imageName}.png`});
-
     await browser.close();
+
     socket.emit("done");
 };
 
