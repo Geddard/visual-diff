@@ -44,7 +44,7 @@ const Screenshooter: React.FC = () => {
 
   const renderLastImage = () => {
     if (isDone) {
-      return <img src={`/${lastImage}.png`} alt="witcher"/>
+      return <img src={`/${lastImage}.png`} alt={lastImage}/>
     }
   };
 

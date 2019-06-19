@@ -3,12 +3,10 @@ import classnames from "classnames";
 
 import "./Input.css";
 
-type TStringSetter = Dispatch<React.SetStateAction<string>>;
-
 interface InputProps {
   title: string,
   value: string,
-  setter: TStringSetter,
+  setter: Dispatch<React.SetStateAction<string>>;
   customClassname?: string
 }
 

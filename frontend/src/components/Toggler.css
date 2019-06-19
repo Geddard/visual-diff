@@ -1,0 +1,16 @@
+.toggler {
+  display: flex;
+  justify-content: center;
+  height: 46px;
+  width: 60%;
+  margin: 20px auto;
+}
+
+.toggler__option {
+  height: 100%;
+  flex: 1;
+}
+
+.toggler__option--active {
+  background-color: #c6c6c6;
+}
