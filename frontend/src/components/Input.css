@@ -1,0 +1,21 @@
+.field-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.input-label {
+  margin-right: 10px;
+  width: 40%;
+}
+
+.input-box {
+  width: 70%;
+  height: 30px;
+  margin: 10px 0;
+}
+
+.input-label,
+.input-box {
+  display: inline-flex;
+  align-items: center;
+}
