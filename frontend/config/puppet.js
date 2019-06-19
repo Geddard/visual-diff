@@ -1,16 +1,26 @@
 const pptr = require("puppeteer");
 const app = require('http').createServer();
 const io = require('socket.io')(app);
+const freeze = require("./util/freeze");
+const blockImages = require("./util/blockImages");
 
 app.listen(80);
 
 const shoot = async (config, socket) => {
-    const browser = await pptr.launch();
+    const browser = await pptr.launch({
+        defaultViewport: {
+            width: config.width || 1360,
+            height: config.height || 768
+        }
+    });
     const page = await browser.newPage();
 
+    await page.setRequestInterception(true);
+    blockImages(page);
 
+    await page.goto(`https://${config.imageUrl}`, { timeout: 99999 });
 
-    await page.goto(`https://${config.imageUrl}`);
+    freeze(page);
 
     if (config.hoverElClassName) {
         await page.hover(config.hoverElClassName);
