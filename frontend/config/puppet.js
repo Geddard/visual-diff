@@ -3,6 +3,7 @@ const app = require('http').createServer();
 const io = require('socket.io')(app);
 const freeze = require("./util/freeze");
 const blockImages = require("./util/blockImages");
+const fs = require("fs");
 
 app.listen(80);
 
@@ -39,5 +40,19 @@ const shoot = async (config, socket) => {
 io.on('connection', (socket) => {
     socket.on("shoot", (config) => {
         shoot(config, socket);
-    })
+    });
+
+    socket.on("getImages", () => {
+        fs.readdir("./public", (error, files) => {
+            const images = [];
+
+            files.forEach(file => {
+                if (/(.png)/.test(file)) {
+                    images.push(file);
+                }
+            });
+
+            socket.emit("imagesReady", images);
+        });
+    });
 });

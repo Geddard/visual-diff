@@ -12,18 +12,19 @@ const App: React.FC = () => {
     SCREENSHOOTER: "Screenshooter",
     DIFFER: "Differ"
   };
+  const defaultForm = OPTIONS.DIFFER;
 
-  const [activeForm, setActiveForm] = useState(OPTIONS.SCREENSHOOTER);
+  const [activeForm, setActiveForm] = useState(defaultForm);
 
   const handleTogglerClick = (option: string) => {
     setActiveForm(option);
   }
 
-const renderActiveForm = () => {
-  return activeForm === OPTIONS.SCREENSHOOTER
-    ? <Screenshooter />
-    : <Differ />;
-}
+  const renderActiveForm = () => {
+    return activeForm === OPTIONS.SCREENSHOOTER
+      ? <Screenshooter />
+      : <Differ />;
+  }
 
   return (
     <div className="app">
@@ -31,7 +32,7 @@ const renderActiveForm = () => {
 
           <Toggler
             options={OPTIONS}
-            defaultOption={OPTIONS.SCREENSHOOTER}
+            defaultOption={defaultForm}
             handler={handleTogglerClick}
           />
 
