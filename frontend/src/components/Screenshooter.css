@@ -1,0 +1,56 @@
+.screenshooter-form {
+  width: 50%;
+}
+
+.field-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.input-label {
+  margin-right: 10px;
+  width: 40%;
+}
+
+.input-box {
+  width: 70%;
+  height: 30px;
+  margin: 10px 0;
+}
+
+.input-label,
+.input-box {
+  display: inline-flex;
+  align-items: center;
+}
+
+.loading:after {
+  content: ".";
+  margin-left: -12px;
+  animation: dots 1s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow:
+      .25em 0 0 rgba(0, 0, 0, 0),
+      .5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: white;
+    text-shadow:
+      .25em 0 0 rgba(0, 0, 0, 0),
+      .5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 white;
+  }
+}

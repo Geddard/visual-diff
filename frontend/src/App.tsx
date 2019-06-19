@@ -1,78 +1,16 @@
-import React, { useState, Dispatch } from "react";
+import React from "react";
 import logo from "./logo.svg";
+
 import "./App.css";
-import io from 'socket.io-client';
-import Input from "./components/Input";
 
-const App: React.FC = () => {
-  const [imageName, setImageName] = useState("frontpage");
-  const [imageUrl, setImageUrl] = useState("www.gog.com");
-  const [hoverElClassName, setHoverElClassName] = useState("");
-  const [clickElClassName, setClickElClassName] = useState("");
-  const [lastImage, setLastImage] = useState("");
-  const [isDone, setIsDone] = useState(false);
-  const [loading, setLoading] = useState(false);
+import Screenshooter from "./components/Screenshooter";
 
-  const socket = io("http://localhost");
-  socket.connect();
-
-  socket.on("done", () => {
-    setIsDone(true);
-    setLoading(false);
-    setLastImage(imageName);
-  });
-
-  const shoot = async () => {
-    setIsDone(false);
-    setLoading(true);
-    const config = {
-      imageName,
-      imageUrl
-    };
-
-    if (hoverElClassName !== "") {
-      Object.assign(config, {hoverElClassName});
-    }
-
-    if (clickElClassName !== "") {
-      Object.assign(config, {clickElClassName});
-    }
-
-    socket.emit("shoot", config);
-  };
-
-  const renderLastImage = () => {
-    if (isDone) {
-      return <img src={`/${lastImage}.png`} alt="witcher"/>
-    }
-  };
-
-  return (
-    <div className="app">
-      <div className="app-header">
-
+const App: React.FC = () => (
+  <div className="app">
         <img src={logo} className="app-logo" alt="logo" />
 
-        <div className="app-form">
-
-          <Input title="Image Name" value={imageName} setter={setImageName}/>
-          <Input title="Image Url" value={imageUrl} setter={setImageUrl}/>
-          <Input title="(Optional) Hover element" value={hoverElClassName} setter={setHoverElClassName}/>
-          <Input title="(Optional) Click element" value={clickElClassName} setter={setClickElClassName}/>
-
-          <br/>
-
-          <button onClick={shoot}>Take screenshot</button>
-
-          {loading ? <p className="loading" /> : null}
-
-          {isDone ? <p>Done!</p> : null}
-
-          {renderLastImage()}
-        </div>
-
-      </div>
-    </div>
-)};
+        <Screenshooter />
+  </div>
+);
 
 export default App;
