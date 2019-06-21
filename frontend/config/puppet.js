@@ -33,7 +33,9 @@ const shoot = async (config, socket) => {
         await page.click(config.clickElClassName);
     }
 
-    await page.screenshot({path: `./public/${config.imageName}.png`});
+    await page.screenshot({
+        path: `./public/${config.imageName}.png`
+    });
     await browser.close();
 
     socket.emit('done');

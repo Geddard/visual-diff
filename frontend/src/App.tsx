@@ -12,7 +12,7 @@ const App: React.FC = () => {
     SCREENSHOOTER: "Screenshooter",
     DIFFER: "Differ"
   };
-  const defaultForm = OPTIONS.DIFFER;
+  const defaultForm = OPTIONS.SCREENSHOOTER;
 
   const [activeForm, setActiveForm] = useState(defaultForm);
 

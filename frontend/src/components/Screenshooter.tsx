@@ -58,7 +58,7 @@ const Screenshooter: React.FC = () => {
 
       <br/>
 
-      <button onClick={shoot}>Take screenshot</button>
+      <button className="screenshooter-btn" onClick={shoot}>Take screenshot</button>
 
       {loading ? <p className="loading" /> : null}
 

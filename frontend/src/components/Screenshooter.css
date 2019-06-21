@@ -2,6 +2,10 @@
   width: 50%;
 }
 
+.screenshooter-btn {
+  height: 46px;
+}
+
 .loading:after {
   content: ".";
   margin-left: -12px;
