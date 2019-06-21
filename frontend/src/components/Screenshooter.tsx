@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import "./Screenshooter.css";
 
 import Input from "./Input";
+import Checkbox from "./Checkbox";
 
 const Screenshooter: React.FC = () => {
   const [imageName, setImageName] = useState("frontpage");
@@ -22,13 +23,13 @@ const Screenshooter: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const socket = io("http://localhost");
-  socket.connect();
 
   socket.on("done", () => {
     setIsDone(true);
     setLoading(false);
     setCacheKey(new Date().getTime());
     setLastImage(imageName);
+    socket.disconnect();
   });
 
   const shoot = async () => {
@@ -48,7 +49,7 @@ const Screenshooter: React.FC = () => {
     if (clickElClassName !== "") {
       Object.assign(config, {clickElClassName});
     }
-
+    socket.connect();
     socket.emit("shoot", config);
   };
 
@@ -74,20 +75,17 @@ const Screenshooter: React.FC = () => {
 
       <button className="screenshooter-btn" onClick={shoot}>Take screenshot</button>
       <div className="options">
-        <label className="screenshooter__full-page" htmlFor="fullPage">Full Page</label>
-        <input
-          type="checkbox"
+        <Checkbox
           name="fullPage"
-          id="fullPage"
-          onChange={(e) => setFullPageChecked(e.target.checked)}
+          setter={setFullPageChecked}
+          label="Full Page"
+          customClassName="screenshooter__checkbox"
         />
-
-        <label className="screenshooter__full-page" htmlFor="blockImages">Block Images</label>
-        <input
-          type="checkbox"
+        <Checkbox
           name="blockImages"
-          id="blockImages"
-          onChange={(e) => setBlockImagesChecked(e.target.checked)}
+          setter={setBlockImagesChecked}
+          label="Block Images"
+          customClassName="screenshooter__checkbox"
         />
       </div>
 
