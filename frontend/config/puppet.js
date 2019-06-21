@@ -9,6 +9,16 @@ const pixelmatch = require('pixelmatch');
 
 app.listen(80);
 
+const checkForExistingFile = (fileName) => {
+    fs.readdir('./public', (error, files) => {
+        files.forEach(file => {
+            if (file.indexOf(`./public/${fileName}.png`) !== -1) {
+                fs.unlinkSync(file);
+            }
+        });
+    });
+};
+
 const shoot = async (config, socket) => {
     const browser = await pptr.launch({
         defaultViewport: {
@@ -18,24 +28,31 @@ const shoot = async (config, socket) => {
     });
     const page = await browser.newPage();
 
-    await page.setRequestInterception(true);
-    blockImages(page);
+    if (config.blockImagesChecked) {
+        await page.setRequestInterception(true);
+        blockImages(page);
+    }
 
     await page.goto(`https://${config.imageUrl}`, { timeout: 99999 });
 
     freeze(page);
 
     if (config.hoverElClassName) {
-        await page.hover(config.hoverElClassName);
+        await page.hover(`.${config.hoverElClassName}`);
     }
 
     if (config.clickElClassName) {
-        await page.click(config.clickElClassName);
+        await page.click(`.${config.clickElClassName}`);
     }
 
-    await page.screenshot({
-        path: `./public/${config.imageName}.png`
-    });
+    await checkForExistingFile(config.imageName);
+
+    const screenshotConfig = {
+        path: `./public/${config.imageName}.png`,
+        fullPage: config.fullPageChecked
+    };
+
+    await page.screenshot(screenshotConfig);
     await browser.close();
 
     socket.emit('done');

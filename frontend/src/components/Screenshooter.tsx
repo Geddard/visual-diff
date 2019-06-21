@@ -8,9 +8,16 @@ import Input from "./Input";
 const Screenshooter: React.FC = () => {
   const [imageName, setImageName] = useState("frontpage");
   const [imageUrl, setImageUrl] = useState("www.gog.com");
+
   const [hoverElClassName, setHoverElClassName] = useState("");
   const [clickElClassName, setClickElClassName] = useState("");
+
+  const [fullPageChecked, setFullPageChecked] = useState(false);
+  const [blockImagesChecked, setBlockImagesChecked] = useState(false);
+
   const [lastImage, setLastImage] = useState("");
+  const [cacheKey, setCacheKey] = useState(0);
+
   const [isDone, setIsDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +27,7 @@ const Screenshooter: React.FC = () => {
   socket.on("done", () => {
     setIsDone(true);
     setLoading(false);
+    setCacheKey(new Date().getTime());
     setLastImage(imageName);
   });
 
@@ -28,7 +36,9 @@ const Screenshooter: React.FC = () => {
     setLoading(true);
     const config = {
       imageName,
-      imageUrl
+      imageUrl,
+      fullPageChecked,
+      blockImagesChecked
     };
 
     if (hoverElClassName !== "") {
@@ -44,7 +54,11 @@ const Screenshooter: React.FC = () => {
 
   const renderLastImage = () => {
     if (isDone) {
-      return <img src={`/${lastImage}.png`} alt={lastImage}/>
+      return (
+        <div className="imgage__wrapper">
+          <img className="screenshot" src={`/${lastImage}.png?cacheKey=${cacheKey}`} alt={lastImage}/>
+        </div>
+      );
     }
   };
 
@@ -59,6 +73,23 @@ const Screenshooter: React.FC = () => {
       <br/>
 
       <button className="screenshooter-btn" onClick={shoot}>Take screenshot</button>
+      <div className="options">
+        <label className="screenshooter__full-page" htmlFor="fullPage">Full Page</label>
+        <input
+          type="checkbox"
+          name="fullPage"
+          id="fullPage"
+          onChange={(e) => setFullPageChecked(e.target.checked)}
+        />
+
+        <label className="screenshooter__full-page" htmlFor="blockImages">Block Images</label>
+        <input
+          type="checkbox"
+          name="blockImages"
+          id="blockImages"
+          onChange={(e) => setBlockImagesChecked(e.target.checked)}
+        />
+      </div>
 
       {loading ? <p className="loading" /> : null}
 

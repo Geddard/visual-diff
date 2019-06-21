@@ -6,6 +6,16 @@
   height: 46px;
 }
 
+.screenshot {
+  max-width: 100%;
+  margin-bottom: 30px;
+}
+
+.screenshooter__full-page {
+  font-size: 14px;
+  margin-left: 10px;
+}
+
 .loading:after {
   content: ".";
   margin-left: -12px;
