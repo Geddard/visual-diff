@@ -7,7 +7,7 @@ const ignoredFiles = require('react-dev-utils/ignoredFiles');
 const paths = require('./paths');
 const fs = require('fs');
 
-const pptr = require("puppeteer");
+const puppet =require('../config/puppet');
 
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const host = process.env.HOST || '0.0.0.0';
@@ -85,6 +85,8 @@ module.exports = function(proxy, allowedHost) {
     public: allowedHost,
     proxy,
     before(app, server) {
+      puppet(app);
+
       if (fs.existsSync(paths.proxySetup)) {
         // This registers user provided middleware for proxy reasons
         require(paths.proxySetup)(app);

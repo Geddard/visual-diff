@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import io from 'socket.io-client';
+import axios from "axios";
 
 import "./Screenshooter.css";
 
@@ -22,15 +22,6 @@ const Screenshooter: React.FC = () => {
   const [isDone, setIsDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const socket = io("http://localhost");
-
-  socket.on("done", () => {
-    setIsDone(true);
-    setLoading(false);
-    setCacheKey(new Date().getTime());
-    setLastImage(imageName);
-    socket.disconnect();
-  });
 
   const shoot = async () => {
     setIsDone(false);
@@ -49,9 +40,15 @@ const Screenshooter: React.FC = () => {
     if (clickElClassName !== "") {
       Object.assign(config, {clickElClassName});
     }
-    socket.connect();
-    socket.emit("shoot", config);
-  };
+
+    axios.post("/api/shoot", config)
+      .then(() => {
+        setIsDone(true);
+        setLoading(false);
+        setCacheKey(new Date().getTime());
+        setLastImage(imageName);
+      });
+  }
 
   const renderLastImage = () => {
     if (isDone) {

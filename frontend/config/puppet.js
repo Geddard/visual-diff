@@ -1,13 +1,10 @@
 const pptr = require('puppeteer');
-const app = require('http').createServer();
-const io = require('socket.io')(app);
+const bodyParser = require("body-parser");
 const freeze = require('./util/freeze');
 const blockImages = require('./util/blockImages');
 const fs = require('fs');
 const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
-
-app.listen(80);
 
 const checkForExistingFile = (fileName) => {
     fs.readdir('./public', (error, files) => {
@@ -19,7 +16,7 @@ const checkForExistingFile = (fileName) => {
     });
 };
 
-const shoot = async (config, socket) => {
+const shoot = async (config) => {
     const browser = await pptr.launch({
         defaultViewport: {
             width: config.width || 1360,
@@ -54,16 +51,26 @@ const shoot = async (config, socket) => {
 
     await page.screenshot(screenshotConfig);
     await browser.close();
-
-    socket.emit('done');
 };
 
-io.on('connection', (socket) => {
-    socket.on('shoot', (config) => {
-        shoot(config, socket);
+const compare = (sourceUrl, compareUrl) => {
+    const img1 = PNG.sync.read(fs.readFileSync(`./public/${sourceUrl}`));
+    const img2 = PNG.sync.read(fs.readFileSync(`./public/${compareUrl}`));
+    const {width, height} = img1;
+    const diff = new PNG({width, height});
+
+    pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
+
+    fs.writeFileSync(`./public/${sourceUrl.replace('.png', '')}-diff.png`, PNG.sync.write(diff));
+}
+
+module.exports = (app) => {
+    app.post('/api/shoot', bodyParser.json(), async (req, res) => {
+        await shoot(req.body);
+        res.json("Done");
     });
 
-    socket.on('getImages', () => {
+    app.get('/api/images', (req, res) => {
         fs.readdir('./public', (error, files) => {
             const images = [];
 
@@ -73,20 +80,12 @@ io.on('connection', (socket) => {
                 }
             });
 
-            socket.emit('imagesReady', images);
+            res.json(images);
         });
     });
 
-    socket.on('compare', (sourceUrl, compareUrl) => {
-        const img1 = PNG.sync.read(fs.readFileSync(`./public/${sourceUrl}`));
-        const img2 = PNG.sync.read(fs.readFileSync(`./public/${compareUrl}`));
-        const {width, height} = img1;
-        const diff = new PNG({width, height});
-
-        pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
-
-        fs.writeFileSync(`./public/${sourceUrl.replace('.png', '')}-diff.png`, PNG.sync.write(diff));
-
-        socket.emit('diffReady')
+    app.post('/api/compare', bodyParser.json(), (req, res) => {
+        compare(req.body.sourceUrl, req.body.compareUrl);
+        res.json("Done");
     });
-});
+};

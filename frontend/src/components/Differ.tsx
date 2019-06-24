@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import io from 'socket.io-client';
+import React, { useState, useEffect } from "react";
 import without from "lodash-es/without";
 import remove from "lodash-es/remove";
+import axios from "axios";
 
 import "./Differ.css";
 
@@ -19,9 +19,17 @@ const Differ: React.FC = () => {
   const [imagesReady, setImagesReady] = useState(false);
   const [imagesList, setImagesList] = useState();
 
-  const socket = io("http://localhost");
-  socket.connect();
-  socket.emit("getImages");
+  useEffect(() => {
+    axios.get("/api/images")
+      .then((response: any) => {
+        if (response.data.length) {
+          setImagesReady(true);
+          setImagesList(remove(response.data, (image: string) => {
+            return image.indexOf("diff") === -1;
+          }));
+        }
+      });
+  }, []);
 
   const renderContent = () => {
     let content = null;
@@ -57,15 +65,11 @@ const Differ: React.FC = () => {
     }
   }
 
-  const handleDiffReady = () => {
-    setDiffReady(true);
-    socket.close();
-  }
-
   const doDiff = () => {
-    socket.connect();
-    socket.emit("compare", sourceUrl, compareUrl);
-    socket.on("diffReady", handleDiffReady);
+    axios.post("/api/compare", {sourceUrl, compareUrl})
+      .then(() => {
+        setDiffReady(true);
+      });
   }
 
   const renderCompareTo = () => {
@@ -90,18 +94,8 @@ const Differ: React.FC = () => {
     }
   };
 
-  const handleImagesReady = (images: string[]) => {
-    setImagesReady(true);
-    setImagesList(remove(images, (image: string) => {
-      return image.indexOf("diff") === -1;
-    }));
-  };
-
-  socket.on("imagesReady", handleImagesReady);
-
   const renderSourceList = () => {
     if (imagesReady) {
-      socket.close();
 
       return <Select
                 className="differ__img-picker"

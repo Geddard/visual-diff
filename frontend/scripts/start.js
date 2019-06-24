@@ -13,7 +13,6 @@ process.on('unhandledRejection', err => {
 
 // Ensure environment variables are read.
 require('../config/env');
-require('../config/puppet');
 
 const fs = require('fs');
 const chalk = require('react-dev-utils/chalk');
