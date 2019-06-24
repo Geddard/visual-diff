@@ -61,7 +61,10 @@ const compare = (sourceUrl, compareUrl) => {
 
     pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
 
-    fs.writeFileSync(`./public/${sourceUrl.replace('.png', '')}-diff.png`, PNG.sync.write(diff));
+    fs.writeFileSync(
+        `./public/${sourceUrl.replace('.png', '')}-${compareUrl.replace('.png', '')}-diff.png`,
+        PNG.sync.write(diff)
+    );
 }
 
 module.exports = (app) => {

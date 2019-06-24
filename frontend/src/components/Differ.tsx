@@ -35,7 +35,7 @@ const Differ: React.FC = () => {
     let content = null;
 
     if (diffReady) {
-      content = renderImg(`${sourceUrl.replace(".png", "")}-diff.png`);
+      content = renderImg(`${sourceUrl.replace(".png", "")}-${compareUrl.replace(".png", "")}-diff.png`);
     } else {
       content = (
         <div className="differ-form">
