@@ -5,6 +5,7 @@ import "./Screenshooter.css";
 
 import Input from "./Input";
 import Checkbox from "./Checkbox";
+import Steps from "./Steps";
 
 const Screenshooter: React.FC = () => {
   const [imageName, setImageName] = useState("frontpage");
@@ -64,9 +65,9 @@ const Screenshooter: React.FC = () => {
     <div className="screenshooter-form">
 
       <Input title="Image Name" value={imageName} setter={setImageName}/>
-      <Input title="Image Url" value={imageUrl} setter={setImageUrl}/>
-      <Input title="(Optional) Hover element" value={hoverElClassName} setter={setHoverElClassName}/>
-      <Input title="(Optional) Click element" value={clickElClassName} setter={setClickElClassName}/>
+      <Input title="URL" value={imageUrl} setter={setImageUrl}/>
+
+      <Steps />
 
       <br/>
 

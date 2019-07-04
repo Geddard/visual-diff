@@ -1,31 +1,38 @@
 import React from "react";
 
 interface SelectProps {
-  className: string;
+  className?: string;
   options: string[];
-  onChangeHandler: (selectedImage: string) => void
+  defaultOption?: string;
+  onChangeHandler: (...args: any[]) => void
 }
 
 const Select: React.FC<SelectProps> = ({
   className,
   options,
+  defaultOption,
   onChangeHandler
-}) => (
-  <select
-    className={className}
-    onChange={(event) => onChangeHandler(event.target.value)}
-  >
-    {renderOptions(options)}
-  </select>
-);
+}) => {
 
-const renderOptions = (options: string[]) => {
-  const selectOptions = [
-    "Select Image"
-  ];
+  const renderOptions = () => {
+    const selectOptions = [
+      defaultOption || "Select"
+    ];
 
-  if (options) {
-    return selectOptions.concat(options).map((option: string, index: number) => <option key={index}>{option}</option>)
+    if (options) {
+      return selectOptions.concat(options).map((option: string, index: number) => <option key={index}>{option}</option>)
+    }
   }
+
+  return (
+    <select
+      className={className}
+      onChange={(event) => onChangeHandler(event.target.value)}
+    >
+      {renderOptions()}
+    </select>
+  );
 }
+
+
 export default Select;
