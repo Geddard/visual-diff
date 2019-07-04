@@ -8,15 +8,19 @@ interface InputProps {
   value: string,
   setter: Dispatch<React.SetStateAction<string>>;
   customClassname?: string
+  isInline?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
   title,
   value,
   setter,
-  customClassname
+  customClassname,
+  isInline
 }) => (
-  <div className={classnames("field-container", customClassname)}>
+  <div className={classnames("field-container", customClassname, {
+    "field-container--inline": isInline
+  })}>
     <label className="input-label" htmlFor="imgName">{title}</label>
     <input
       className="input-box"

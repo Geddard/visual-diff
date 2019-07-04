@@ -3,6 +3,13 @@
   justify-content: flex-start;
 }
 
+.field-container--inline {
+  display: inline-flex;
+  width: 50%;
+  margin-left: 50px;
+  align-items: center;
+}
+
 .input-label {
   margin-right: 10px;
   width: 40%;

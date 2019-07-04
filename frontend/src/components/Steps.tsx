@@ -62,7 +62,12 @@ const Steps: React.FC = () => {
     if (!isEmpty(stepsConfig[index])) {
       const action = (stepsConfig[index].action as keyof typeof ACTION_PAIRS);
 
-      return <Input title={ACTION_PAIRS[action]} value={""} setter={changeStepTarget}/>
+      return <Input
+                title={ACTION_PAIRS[action]}
+                value={""}
+                setter={changeStepTarget}
+                isInline
+              />
     }
   }
 
