@@ -5,8 +5,8 @@ import "./Input.css";
 
 interface InputProps {
   title: string,
-  value: string,
-  setter: Dispatch<React.SetStateAction<string>>;
+  value: string | number,
+  setter: (...args: any[]) => void;
   customClassname?: string
   isInline?: boolean;
 }

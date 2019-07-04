@@ -64,8 +64,8 @@ const Steps: React.FC = () => {
 
       return <Input
                 title={ACTION_PAIRS[action]}
-                value={""}
-                setter={changeStepTarget}
+                value={stepsConfig[index].value}
+                setter={changeStepTarget.bind(null, index)}
                 isInline
               />
     }
@@ -74,11 +74,16 @@ const Steps: React.FC = () => {
   const changeStepAction = (index: number, action: string) => {
     const newConfig = cloneDeep(stepsConfig);
 
-    set(newConfig, `${index}`, { action: action.toUpperCase(), value: 0 });
+    set(newConfig, `${index}`, { action: action.toUpperCase(), value: "" });
     setStepsConfig(newConfig);
   }
 
-  const changeStepTarget = () => {}
+  const changeStepTarget = (index: number, target: string) => {
+    const newConfig = cloneDeep(stepsConfig);
+
+    newConfig[index].value = target;
+    setStepsConfig(newConfig);
+  }
 
   return (
     <div className="steps">
