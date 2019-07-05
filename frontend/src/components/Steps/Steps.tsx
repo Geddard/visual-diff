@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import Select from "./Select";
-
-import "./Steps.css";
+import React, { useState, useContext } from "react";
 import cloneDeep from "lodash-es/cloneDeep";
 import set from "lodash-es/set";
 import isEmpty from "lodash-es/isEmpty";
-import Input from "./Input";
+
+import "./Steps.css";
+
+import Select from "../Select/Select";
+import Input from "../Input/Input";
+import { StepsContext } from "./Steps.context";
 
 enum OPTIONS {
   HOVER = "Hover",
@@ -16,14 +18,14 @@ enum OPTIONS {
 }
 
 enum ACTION_PAIRS {
-  HOVER = "Element",
-  CLICK = "Element",
+  HOVER = "Element (JS Path)",
+  CLICK = "Element (JS Path)",
   NAVIGATE = "URL",
   WAIT = "Time",
-  FOCUS = "Element"
+  FOCUS = "Element (JS Path)"
 }
 
-interface IStepsConfig {
+export interface IStepsConfig {
   [key: number]: {
     action: string;
     value: string | number;
@@ -33,6 +35,8 @@ interface IStepsConfig {
 const Steps: React.FC = () => {
   const [steps, setSteps] = useState(0);
   const [stepsConfig, setStepsConfig] = useState<IStepsConfig>({});
+
+  const context = useContext(StepsContext);
 
   const renderSteps = () => {
     const stepsToRender = [];
@@ -83,6 +87,11 @@ const Steps: React.FC = () => {
 
     newConfig[index].value = target;
     setStepsConfig(newConfig);
+    updateStepsContext(newConfig);
+  }
+
+  const updateStepsContext = (stepsConfig: IStepsConfig) => {
+    context.setSteps(stepsConfig);
   }
 
   return (

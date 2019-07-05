@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "./Differ.css";
 
-import Select from "./Select";
+import Select from "../Select/Select";
 
 const Differ: React.FC = () => {
   const [sourceSelected, setSourceSelected] = useState(false);

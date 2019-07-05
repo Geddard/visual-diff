@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import logo from "./logo.svg";
 
 import "./App.css";
 
-import Screenshooter from "./components/Screenshooter";
-import Differ from "./components/Differ";
-import Toggler from "./components/Toggler";
+import Screenshooter from "./components/Screenshooter/Screenshooter";
+import Differ from "./components/Differ/Differ";
+import Toggler from "./components/Toggler/Toggler";
+
+import { StepsContext } from "./components/Steps/Steps.context";
 
 const App: React.FC = () => {
   const OPTIONS = {
@@ -15,6 +17,9 @@ const App: React.FC = () => {
   const defaultForm = OPTIONS.SCREENSHOOTER;
 
   const [activeForm, setActiveForm] = useState(defaultForm);
+  const [steps, setSteps] = useState([]);
+
+  const contextValue = useMemo(() => ({ steps, setSteps }), [steps, setSteps]);
 
   const handleTogglerClick = (option: string) => {
     setActiveForm(option);
@@ -22,7 +27,11 @@ const App: React.FC = () => {
 
   const renderActiveForm = () => {
     return activeForm === OPTIONS.SCREENSHOOTER
-      ? <Screenshooter />
+      ? (
+          <StepsContext.Provider value={contextValue}>
+            <Screenshooter />
+          </StepsContext.Provider>
+        )
       : <Differ />;
   }
 

@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 
 import "./Screenshooter.css";
 
-import Input from "./Input";
-import Checkbox from "./Checkbox";
-import Steps from "./Steps";
+import Input from "../Input/Input";
+import Checkbox from "../Checkbox/Checkbox";
+import Steps from "../Steps/Steps";
+
+import { StepsContext } from "../Steps/Steps.context";
 
 const Screenshooter: React.FC = () => {
   const [imageName, setImageName] = useState("frontpage");
   const [imageUrl, setImageUrl] = useState("www.gog.com");
-
-  const [hoverElClassName, setHoverElClassName] = useState("");
-  const [clickElClassName, setClickElClassName] = useState("");
 
   const [fullPageChecked, setFullPageChecked] = useState(false);
   const [blockImagesChecked, setBlockImagesChecked] = useState(false);
@@ -23,24 +22,19 @@ const Screenshooter: React.FC = () => {
   const [isDone, setIsDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const steps = useContext(StepsContext).steps;
 
   const shoot = async () => {
     setIsDone(false);
     setLoading(true);
+
     const config = {
       imageName,
       imageUrl,
+      steps,
       fullPageChecked,
       blockImagesChecked
     };
-
-    if (hoverElClassName !== "") {
-      Object.assign(config, {hoverElClassName});
-    }
-
-    if (clickElClassName !== "") {
-      Object.assign(config, {clickElClassName});
-    }
 
     axios.post("/api/shoot", config)
       .then(() => {

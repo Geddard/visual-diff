@@ -34,12 +34,17 @@ const shoot = async (config) => {
 
     freeze(page);
 
-    if (config.hoverElClassName) {
-        await page.hover(`.${config.hoverElClassName}`);
-    }
+    if (Object.keys(config.steps).length) {
+        Object.keys(config.steps).forEach(async (step) => {
+            const action = config.steps[step].action;
+            const value = config.steps[step].value;
 
-    if (config.clickElClassName) {
-        await page.click(`.${config.clickElClassName}`);
+            if (action === "HOVER") {
+                await page.hover(`.${value}`);
+            } else if (action === "CLICK") {
+                await page.click(`.${value}`);
+            }
+        })
     }
 
     await checkForExistingFile(config.imageName);
