@@ -14,7 +14,8 @@ enum OPTIONS {
   CLICK = "Click",
   NAVIGATE = "Navigate",
   WAIT = "Wait",
-  FOCUS = "Focus"
+  FOCUS = "Focus",
+  SCREENSHOT = "Screenshot"
 }
 
 enum ACTION_PAIRS {
@@ -22,7 +23,8 @@ enum ACTION_PAIRS {
   CLICK = "Element (JS Path)",
   NAVIGATE = "URL",
   WAIT = "Time",
-  FOCUS = "Element (JS Path)"
+  FOCUS = "Element (JS Path)",
+  SCREENSHOT = ""
 }
 
 export interface IStepsConfig {
@@ -66,12 +68,14 @@ const Steps: React.FC = () => {
     if (!isEmpty(stepsConfig[index])) {
       const action = (stepsConfig[index].action as keyof typeof ACTION_PAIRS);
 
-      return <Input
-                title={ACTION_PAIRS[action]}
-                value={stepsConfig[index].value}
-                setter={changeStepTarget.bind(null, index)}
-                isInline
-              />
+      if (!isEmpty(ACTION_PAIRS[action])) {
+        return <Input
+                  title={ACTION_PAIRS[action]}
+                  value={stepsConfig[index].value}
+                  setter={changeStepTarget.bind(null, index)}
+                  isInline
+                />;
+      }
     }
   }
 
@@ -80,6 +84,7 @@ const Steps: React.FC = () => {
 
     set(newConfig, `${index}`, { action: action.toUpperCase(), value: "" });
     setStepsConfig(newConfig);
+    updateStepsContext(newConfig);
   }
 
   const changeStepTarget = (index: number, target: string) => {

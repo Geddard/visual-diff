@@ -35,16 +35,26 @@ const shoot = async (config) => {
     freeze(page);
 
     if (Object.keys(config.steps).length) {
+        let lastAction = "";
+
         Object.keys(config.steps).forEach(async (step) => {
             const action = config.steps[step].action;
             const value = config.steps[step].value;
 
+            if (action !== "SCREENSHOT") {
+                lastAction = `_${action.toLowerCase()}`
+            }
+
             if (action === "HOVER") {
                 await page.hover(`.${value}`);
-                await page.waitFor(500);
             } else if (action === "CLICK") {
                 await page.click(`.${value}`);
-                await page.waitFor(500);
+            } else if (action === "SCREENSHOT") {
+                await page.screenshot({
+                    path: `./public/${config.imageName}${lastAction}.png`,
+                    fullPage: config.fullPageChecked
+                });
+                page.waitFor(2500);
             }
         })
     }
