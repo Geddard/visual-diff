@@ -91,32 +91,36 @@ const Steps: React.FC = () => {
     }
   }
 
-  const changeStepAction = (index: number, action: string) => {
+  const updateConfig = (configUpdater: (newConfig: IStepsConfig) => void) => {
     const newConfig = cloneDeep(stepsConfig);
 
-    set(newConfig, `${index}`, { action: action.toUpperCase(), value: "" });
+    configUpdater(newConfig);
+
     setStepsConfig(newConfig);
-    updateStepsContext(newConfig);
+    context.setSteps(newConfig);
+  }
+
+  const changeStepAction = (index: number, action: string) => {
+    const configUpdater = (newConfig: IStepsConfig) => {
+      set(newConfig, `${index}`, { action: action.toUpperCase(), value: "" });
+    };
+
+    updateConfig(configUpdater);
   }
 
   const changeStepTarget = (index: number, target: string) => {
-    const newConfig = cloneDeep(stepsConfig);
+    const configUpdater = (newConfig: IStepsConfig) => {
+      newConfig[index].value = target;
+    };
 
-    newConfig[index].value = target;
-    setStepsConfig(newConfig);
-    updateStepsContext(newConfig);
+    updateConfig(configUpdater);
   }
 
   const changeStepCropTo = (index: number, isChecked: boolean) => {
-    const newConfig = cloneDeep(stepsConfig);
-
-    newConfig[index].crop = isChecked;
-    setStepsConfig(newConfig);
-    updateStepsContext(newConfig);
-  }
-
-  const updateStepsContext = (stepsConfig: IStepsConfig) => {
-    context.setSteps(stepsConfig);
+    const configUpdater = (newConfig: IStepsConfig) => {
+      newConfig[index].crop = isChecked;
+    };
+    updateConfig(configUpdater);
   }
 
   return (
