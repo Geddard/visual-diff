@@ -66,7 +66,10 @@ const shoot = async (config) => {
         fullPage: config.fullPageChecked
     };
 
-    await page.screenshot(screenshotConfig);
+    if (config.takeResultScreenshot) {
+        await page.screenshot(screenshotConfig);
+    }
+
     await browser.close();
 };
 

@@ -5,8 +5,8 @@
 
 .field-container--inline {
   display: inline-flex;
-  width: 80%;
-  margin-left: 50px;
+  width: 50%;
+  margin: 0 50px;
   align-items: center;
 }
 

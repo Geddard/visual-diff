@@ -1,12 +1,14 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, ChangeEvent } from "react";
 import classnames from "classnames";
 
 import "./Checkbox.css";
 
+type TSetter = Dispatch<SetStateAction<boolean>>;
+
 interface CheckboxProps {
   name: string;
   label: string;
-  setter: Dispatch<SetStateAction<boolean>>;
+  setter: (...args: any[]) => void | TSetter;
   customClassName?: string;
 }
 
@@ -15,9 +17,11 @@ const Checkbox: React.FC<CheckboxProps> = ({
   label,
   setter,
   customClassName
-}) => (
+}) => {
+
+  return (
   <div className={classnames("checkbox", customClassName)}>
-    <label htmlFor={name}>
+    <label htmlFor={name} className="checkbox__label">
       {label}
     </label>
     <input
@@ -28,5 +32,6 @@ const Checkbox: React.FC<CheckboxProps> = ({
     />
   </div>
 );
+};
 
 export default Checkbox;

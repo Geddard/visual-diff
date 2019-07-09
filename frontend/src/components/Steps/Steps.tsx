@@ -8,6 +8,7 @@ import "./Steps.css";
 import Select from "../Select/Select";
 import Input from "../Input/Input";
 import { StepsContext } from "./Steps.context";
+import Checkbox from "../Checkbox/Checkbox";
 
 enum OPTIONS {
   HOVER = "Hover",
@@ -19,11 +20,11 @@ enum OPTIONS {
 }
 
 enum ACTION_PAIRS {
-  HOVER = "Element (JS Path)",
-  CLICK = "Element (JS Path)",
+  HOVER = "Element",
+  CLICK = "Element",
   NAVIGATE = "URL",
   WAIT = "Time",
-  FOCUS = "Element (JS Path)",
+  FOCUS = "Element",
   SCREENSHOT = ""
 }
 
@@ -31,6 +32,7 @@ export interface IStepsConfig {
   [key: number]: {
     action: string;
     value: string | number;
+    crop?: boolean;
   }
 }
 
@@ -69,12 +71,22 @@ const Steps: React.FC = () => {
       const action = (stepsConfig[index].action as keyof typeof ACTION_PAIRS);
 
       if (!isEmpty(ACTION_PAIRS[action])) {
-        return <Input
-                  title={ACTION_PAIRS[action]}
-                  value={stepsConfig[index].value}
-                  setter={changeStepTarget.bind(null, index)}
-                  isInline
-                />;
+        return (
+          <span className="step__params">
+            <Input
+              title={ACTION_PAIRS[action]}
+              value={stepsConfig[index].value}
+              setter={changeStepTarget.bind(null, index)}
+              isInline
+            />
+            <Checkbox
+              name="cropToElement"
+              setter={changeStepCropTo.bind(null, index)}
+              label="Crop to element"
+              customClassName="step__crop"
+            />
+          </span>
+        );
       }
     }
   }
@@ -91,6 +103,14 @@ const Steps: React.FC = () => {
     const newConfig = cloneDeep(stepsConfig);
 
     newConfig[index].value = target;
+    setStepsConfig(newConfig);
+    updateStepsContext(newConfig);
+  }
+
+  const changeStepCropTo = (index: number, isChecked: boolean) => {
+    const newConfig = cloneDeep(stepsConfig);
+
+    newConfig[index].crop = isChecked;
     setStepsConfig(newConfig);
     updateStepsContext(newConfig);
   }

@@ -17,3 +17,13 @@
 .steps__select-action {
   height: 50px;
 }
+
+.step__params {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.step__crop {
+  font-size: 15px;
+}

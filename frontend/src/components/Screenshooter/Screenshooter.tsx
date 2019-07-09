@@ -15,6 +15,7 @@ const Screenshooter: React.FC = () => {
 
   const [fullPageChecked, setFullPageChecked] = useState(false);
   const [blockImagesChecked, setBlockImagesChecked] = useState(false);
+  const [takeResultScreenshot, setTakeResultScreenshot] = useState(false);
 
   const [lastImage, setLastImage] = useState("");
   const [cacheKey, setCacheKey] = useState(0);
@@ -33,7 +34,8 @@ const Screenshooter: React.FC = () => {
       imageUrl,
       steps,
       fullPageChecked,
-      blockImagesChecked
+      blockImagesChecked,
+      takeResultScreenshot
     };
 
     axios.post("/api/shoot", config)
@@ -67,6 +69,7 @@ const Screenshooter: React.FC = () => {
 
       <button className="screenshooter-btn" onClick={shoot}>Take screenshot</button>
       <div className="options">
+        OPTIONS
         <Checkbox
           name="fullPage"
           setter={setFullPageChecked}
@@ -77,6 +80,12 @@ const Screenshooter: React.FC = () => {
           name="blockImages"
           setter={setBlockImagesChecked}
           label="Block Images"
+          customClassName="screenshooter__checkbox"
+        />
+        <Checkbox
+          name="blockImages"
+          setter={setTakeResultScreenshot}
+          label="Take screenshot after finishing"
           customClassName="screenshooter__checkbox"
         />
       </div>
