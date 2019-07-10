@@ -5,7 +5,7 @@ import "./Input.css";
 
 interface InputProps {
   title: string,
-  value: string | number,
+  value: string | number | undefined,
   setter: (...args: any[]) => void;
   customClassname?: string
   isInline?: boolean;

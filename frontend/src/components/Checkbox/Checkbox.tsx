@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, ChangeEvent } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import classnames from "classnames";
 
 import "./Checkbox.css";

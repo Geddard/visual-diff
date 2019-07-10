@@ -37,7 +37,7 @@ const shoot = async (config) => {
     if (Object.keys(config.steps).length) {
         let lastAction = "";
 
-        Object.keys(config.steps).forEach(async (step) => {
+        for (step of Object.keys(config.steps)) {
             const action = config.steps[step].action;
             const value = config.steps[step].value;
 
@@ -54,19 +54,19 @@ const shoot = async (config) => {
                     path: `./public/${config.imageName}${lastAction}.png`,
                     fullPage: config.fullPageChecked
                 });
-                page.waitFor(2500);
             }
-        })
+        }
     }
 
     await checkForExistingFile(config.imageName);
 
-    const screenshotConfig = {
-        path: `./public/${config.imageName}.png`,
-        fullPage: config.fullPageChecked
-    };
 
     if (config.takeResultScreenshot) {
+        const screenshotConfig = {
+            path: `./public/${config.imageName}.png`,
+            fullPage: config.fullPageChecked
+        };
+
         await page.screenshot(screenshotConfig);
     }
 

@@ -8,7 +8,6 @@ import "./Steps.css";
 import Select from "../Select/Select";
 import Input from "../Input/Input";
 import { StepsContext } from "./Steps.context";
-import Checkbox from "../Checkbox/Checkbox";
 
 enum OPTIONS {
   HOVER = "Hover",
@@ -32,7 +31,6 @@ export interface IStepsConfig {
   [key: number]: {
     action: string;
     value: string | number;
-    crop?: boolean;
   }
 }
 
@@ -79,12 +77,6 @@ const Steps: React.FC = () => {
               setter={changeStepTarget.bind(null, index)}
               isInline
             />
-            <Checkbox
-              name="cropToElement"
-              setter={changeStepCropTo.bind(null, index)}
-              label="Crop to element"
-              customClassName="step__crop"
-            />
           </span>
         );
       }
@@ -102,7 +94,10 @@ const Steps: React.FC = () => {
 
   const changeStepAction = (index: number, action: string) => {
     const configUpdater = (newConfig: IStepsConfig) => {
-      set(newConfig, `${index}`, { action: action.toUpperCase(), value: "" });
+      set(newConfig, `${index}`, {
+        action: action.toUpperCase(),
+        value: ""
+      });
     };
 
     updateConfig(configUpdater);
@@ -113,13 +108,6 @@ const Steps: React.FC = () => {
       newConfig[index].value = target;
     };
 
-    updateConfig(configUpdater);
-  }
-
-  const changeStepCropTo = (index: number, isChecked: boolean) => {
-    const configUpdater = (newConfig: IStepsConfig) => {
-      newConfig[index].crop = isChecked;
-    };
     updateConfig(configUpdater);
   }
 
