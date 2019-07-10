@@ -48,7 +48,7 @@ const Screenshooter: React.FC = () => {
   }
 
   const renderLastImage = () => {
-    if (isDone) {
+    if (isDone && takeResultScreenshot) {
       return (
         <div className="imgage__wrapper">
           <img className="screenshot" src={`/${lastImage}.png?cacheKey=${cacheKey}`} alt={lastImage}/>
@@ -67,7 +67,9 @@ const Screenshooter: React.FC = () => {
 
       <br/>
 
-      <button className="screenshooter-btn" onClick={shoot}>Take screenshot</button>
+      <button className="screenshooter-btn" onClick={shoot}>
+        Run { steps.length ? "tasks" : "task" }
+      </button>
       <div className="options">
         OPTIONS
         <Checkbox

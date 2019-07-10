@@ -34,12 +34,12 @@ const shoot = async (config) => {
 
     freeze(page);
 
-    if (Object.keys(config.steps).length) {
+    if (config.steps.length) {
         let lastAction = "";
 
-        for (step of Object.keys(config.steps)) {
-            const action = config.steps[step].action;
-            const value = config.steps[step].value;
+        for (step of config.steps) {
+            const action = step.action;
+            const value = step.value;
 
             if (action !== "SCREENSHOT") {
                 lastAction = `_${action.toLowerCase()}`
