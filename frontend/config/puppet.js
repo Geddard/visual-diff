@@ -3,8 +3,6 @@ const bodyParser = require("body-parser");
 const freeze = require('./util/freeze');
 const blockImages = require('./util/blockImages');
 const fs = require('fs');
-const PNG = require('pngjs').PNG;
-const pixelmatch = require('pixelmatch');
 
 const checkForExistingFile = (fileName) => {
     fs.readdir('./public', (error, files) => {
@@ -73,20 +71,6 @@ const shoot = async (config) => {
     await browser.close();
 };
 
-const compare = (sourceUrl, compareUrl) => {
-    const img1 = PNG.sync.read(fs.readFileSync(`./public/${sourceUrl}`));
-    const img2 = PNG.sync.read(fs.readFileSync(`./public/${compareUrl}`));
-    const {width, height} = img1;
-    const diff = new PNG({width, height});
-
-    pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
-
-    fs.writeFileSync(
-        `./public/${sourceUrl.replace('.png', '')}-${compareUrl.replace('.png', '')}-diff.png`,
-        PNG.sync.write(diff)
-    );
-}
-
 module.exports = (app) => {
     app.post('/api/shoot', bodyParser.json(), async (req, res) => {
         await shoot(req.body);
@@ -105,10 +89,5 @@ module.exports = (app) => {
 
             res.json(images);
         });
-    });
-
-    app.post('/api/compare', bodyParser.json(), (req, res) => {
-        compare(req.body.sourceUrl, req.body.compareUrl);
-        res.json("Done");
     });
 };
