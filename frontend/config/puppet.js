@@ -25,12 +25,12 @@ const shoot = async (config) => {
 
     if (config.blockImagesChecked) {
         await page.setRequestInterception(true);
-        blockImages(page);
+        await blockImages(page);
     }
 
     await page.goto(`https://${config.imageUrl}`, { timeout: 99999 });
 
-    freeze(page);
+    await freeze(page);
 
     if (config.steps.length) {
         let lastAction = "";
@@ -39,7 +39,7 @@ const shoot = async (config) => {
             const action = step.action;
             const value = step.value;
 
-            if (action !== "SCREENSHOT") {
+            if (action !== "SCREENSHOT" || action !== "WAIT") {
                 lastAction = `_${action.toLowerCase()}`
             }
 
@@ -47,6 +47,8 @@ const shoot = async (config) => {
                 await page.hover(`.${value}`);
             } else if (action === "CLICK") {
                 await page.click(`.${value}`);
+            } else if (action === "WAIT") {
+                await page.waitFor(parseInt(value));
             } else if (action === "SCREENSHOT") {
                 await page.screenshot({
                     path: `./public/${config.imageName}${lastAction}.png`,
