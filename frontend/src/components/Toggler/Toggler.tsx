@@ -12,12 +12,14 @@ interface TogglerProps {
   options: TOptions;
   defaultOption?: string;
   handler: TToggleHandler;
+  children?: JSX.Element
 }
 
 const Toggler: React.FC<TogglerProps> = ({
   options,
   defaultOption = "",
-  handler
+  handler,
+  children
 }) => {
   const [activeOption, setActiveOption] = useState(defaultOption);
 
@@ -47,8 +49,13 @@ const Toggler: React.FC<TogglerProps> = ({
   }
 
   return (
-    <div className="toggler">
-      {(renderOptions(options, handler))}
+    <div className="toggler__wrapper">
+      <div className="toggler">
+        {(renderOptions(options, handler))}
+      </div>
+      <div className="toggler__children">
+        {children}
+      </div>
     </div>
   );
 }

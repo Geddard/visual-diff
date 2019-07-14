@@ -37,16 +37,17 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-          <img src={logo} className="app-logo" alt="logo" />
+      <div className="app-logo__wrapper">
+        <img src={logo} className="app-logo" alt="logo" />
+      </div>
 
-          <Toggler
-            options={OPTIONS}
-            defaultOption={defaultForm}
-            handler={handleTogglerClick}
-          />
-
-          {renderActiveForm()}
-
+      <Toggler
+        options={OPTIONS}
+        defaultOption={defaultForm}
+        handler={handleTogglerClick}
+      >
+        {renderActiveForm()}
+      </Toggler>
     </div>
 )};
 

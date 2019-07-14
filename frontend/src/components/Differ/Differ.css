@@ -13,7 +13,7 @@
 .differ__img-displayed {
   max-width: 80%;
   border: 1px solid white;
-  margin-bottom: 50px;
+  margin: 20px 0 50px;
 }
 
 .differ-form .source-selector {
