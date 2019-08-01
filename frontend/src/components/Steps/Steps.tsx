@@ -5,6 +5,7 @@ import isEmpty from "lodash-es/isEmpty";
 import "./Steps.css";
 
 import Select from "../Select/Select";
+import Checkbox from "../Checkbox/Checkbox";
 import Input from "../Input/Input";
 import { StepsContext } from "./Steps.context";
 import uniqueId from "lodash-es/uniqueId";
@@ -31,6 +32,8 @@ export interface IStepsConfig {
   action: string;
   value: string | number;
   id: string;
+  crop?: boolean;
+  cropTarget?: string;
 }
 
 const Steps: React.FC = () => {
@@ -62,7 +65,9 @@ const Steps: React.FC = () => {
     newStepsConfig.push({
       action: "",
       value: "",
-      id: `${newStepsConfig.length + 1}_${uniqueId()}`
+      id: `${newStepsConfig.length + 1}_${uniqueId()}`,
+      crop: false,
+      cropTarget: ""
     });
 
     setStepsConfig(newStepsConfig);
@@ -92,6 +97,33 @@ const Steps: React.FC = () => {
             />
           </span>
         );
+      } else if (ACTION_PAIRS[action] === ACTION_PAIRS.SCREENSHOT) {
+        return (
+          <span className="step__params">
+
+            <Checkbox
+              name="cropToElement"
+              setter={changeStepCropTo.bind(null, index)}
+              label="Crop to element"
+              customClassName="step__crop"
+            />
+
+            {
+              stepsConfig[index].crop
+              ? (
+                <Input
+                  title={ACTION_PAIRS[action]}
+                  value={stepsConfig[index].cropTarget}
+                  setter={changeStepCropTarget.bind(null, index)}
+                  isInline
+                />
+                )
+              : null
+            }
+
+          </span>
+        );
+
       }
     }
   }
@@ -116,6 +148,22 @@ const Steps: React.FC = () => {
   const changeStepTarget = (index: number, target: string) => {
     const configUpdater = (newConfig: IStepsConfig[]) => {
       newConfig[index].value = target;
+    };
+
+    updateConfig(configUpdater);
+  }
+
+  const changeStepCropTo = (index: number, isChecked: boolean) => {
+    const configUpdater = (newConfig: IStepsConfig[]) => {
+      newConfig[index].crop = isChecked;
+    };
+
+    updateConfig(configUpdater);
+  }
+
+  const changeStepCropTarget = (index: number, target: string) => {
+    const configUpdater = (newConfig: IStepsConfig[]) => {
+      newConfig[index].cropTarget = target;
     };
 
     updateConfig(configUpdater);

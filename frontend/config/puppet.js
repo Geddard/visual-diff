@@ -39,7 +39,7 @@ const shoot = async (config) => {
             const action = step.action;
             const value = step.value;
 
-            if (action !== "SCREENSHOT" || action !== "WAIT") {
+            if (action !== "SCREENSHOT" && action !== "WAIT") {
                 lastAction = `_${action.toLowerCase()}`
             }
 
@@ -50,10 +50,24 @@ const shoot = async (config) => {
             } else if (action === "WAIT") {
                 await page.waitFor(parseInt(value));
             } else if (action === "SCREENSHOT") {
-                await page.screenshot({
+                const ssConfig = {
                     path: `./public/${config.imageName}${lastAction}.png`,
                     fullPage: config.fullPageChecked
-                });
+                };
+
+                if (step.crop && step.cropTarget) {
+                    const element = await page.$(`.${step.cropTarget}`);
+                    const bBox = await element.boundingBox();
+
+                    ssConfig.clip = {
+                        x: bBox.x,
+                        y: bBox.y,
+                        width: bBox.width,
+                        height: bBox.height
+                    };
+                }
+
+                await page.screenshot(ssConfig);
             }
         }
     }
