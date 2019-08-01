@@ -12,14 +12,15 @@ import { StepsContext } from "./components/Steps/Steps.context";
 const App: React.FC = () => {
   const OPTIONS = {
     SCREENSHOOTER: "Screenshooter",
-    DIFFER: "Differ"
+    DIFFER: "Differ",
+
   };
   const defaultForm = OPTIONS.SCREENSHOOTER;
 
   const [activeForm, setActiveForm] = useState(defaultForm);
   const [steps, setSteps] = useState([]);
 
-  const contextValue = useMemo(() => ({ steps, setSteps }), [steps, setSteps]);
+  const stepsContextValue = useMemo(() => ({ steps, setSteps }), [steps, setSteps]);
 
   const handleTogglerClick = (option: string) => {
     setActiveForm(option);
@@ -28,7 +29,7 @@ const App: React.FC = () => {
   const renderActiveForm = () => {
     return activeForm === OPTIONS.SCREENSHOOTER
       ? (
-          <StepsContext.Provider value={contextValue}>
+          <StepsContext.Provider value={stepsContextValue}>
             <Screenshooter />
           </StepsContext.Provider>
         )

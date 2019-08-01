@@ -21,11 +21,9 @@ const Input: React.FC<InputProps> = ({
   <div className={classnames("field-container", customClassname, {
     "field-container--inline": isInline
   })}>
-    {
-      (title)
-      ? <label className="input-label" htmlFor="imgName">{title}</label>
-      : null
-    }
+
+    {(title) ? <label className="input-label" htmlFor="imgName">{title}</label> : null}
+
     <input
       className="input-box"
       id="imgName"
@@ -33,6 +31,7 @@ const Input: React.FC<InputProps> = ({
       type="text"
       onChange={e => setter(e.target.value)}
     />
+
   </div>
 );
 

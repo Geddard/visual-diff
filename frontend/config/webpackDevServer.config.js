@@ -9,6 +9,7 @@ const fs = require('fs');
 
 const puppet = require('../config/puppet');
 const pixelMatch = require('../config/pixelMatch');
+const gql = require('../config/graphql');
 
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const host = process.env.HOST || '0.0.0.0';
@@ -88,6 +89,7 @@ module.exports = function(proxy, allowedHost) {
     before(app, server) {
       puppet(app);
       pixelMatch(app);
+      gql(app);
 
       if (fs.existsSync(paths.proxySetup)) {
         // This registers user provided middleware for proxy reasons
