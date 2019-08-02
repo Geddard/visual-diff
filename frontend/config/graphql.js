@@ -6,7 +6,7 @@ const schema = buildSchema(`
   type Scenario {
     action: String
     crop: Boolean
-    cropToTarget: String
+    cropTarget: String
     value: String
   }
 
