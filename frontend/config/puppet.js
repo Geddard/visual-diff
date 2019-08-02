@@ -28,7 +28,7 @@ const shoot = async (config) => {
         await blockImages(page);
     }
 
-    await page.goto(`https://${config.imageUrl}`, { timeout: 99999 });
+    await page.goto(`https://${config.testUrl}`, { timeout: 99999 });
 
     await freeze(page);
 
@@ -51,7 +51,7 @@ const shoot = async (config) => {
                 await page.waitFor(parseInt(value));
             } else if (action === "SCREENSHOT") {
                 const ssConfig = {
-                    path: `./public/${config.imageName}${lastAction}.png`,
+                    path: `./public/${config.testName}${lastAction}.png`,
                     fullPage: config.fullPageChecked
                 };
 
@@ -72,12 +72,12 @@ const shoot = async (config) => {
         }
     }
 
-    await checkForExistingFile(config.imageName);
+    await checkForExistingFile(config.testName);
 
 
     if (config.takeResultScreenshot) {
         const screenshotConfig = {
-            path: `./public/${config.imageName}.png`,
+            path: `./public/${config.testName}.png`,
             fullPage: config.fullPageChecked
         };
 

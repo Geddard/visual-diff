@@ -5,6 +5,7 @@ import "./App.css";
 
 import Screenshooter from "./components/Screenshooter/Screenshooter";
 import Differ from "./components/Differ/Differ";
+import TestRunner from "./components/TestRunner/TestRunner";
 import Toggler from "./components/Toggler/Toggler";
 
 import { StepsContext } from "./components/Steps/Steps.context";
@@ -13,7 +14,7 @@ const App: React.FC = () => {
   const OPTIONS = {
     SCREENSHOOTER: "Screenshooter",
     DIFFER: "Differ",
-
+    SAVED_TESTS: "Saved tests"
   };
   const defaultForm = OPTIONS.SCREENSHOOTER;
 
@@ -27,13 +28,21 @@ const App: React.FC = () => {
   }
 
   const renderActiveForm = () => {
-    return activeForm === OPTIONS.SCREENSHOOTER
-      ? (
+    let formToRender;
+
+    if (activeForm === OPTIONS.SCREENSHOOTER) {
+      formToRender = (
           <StepsContext.Provider value={stepsContextValue}>
             <Screenshooter />
           </StepsContext.Provider>
-        )
-      : <Differ />;
+        );
+    } else if (activeForm === OPTIONS.DIFFER) {
+      formToRender = <Differ />;
+    } else if (activeForm === OPTIONS.SAVED_TESTS) {
+      formToRender = <TestRunner />;
+    }
+
+    return formToRender;
   }
 
   return (

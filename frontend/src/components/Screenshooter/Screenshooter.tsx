@@ -10,8 +10,8 @@ import Steps from "../Steps/Steps";
 import { StepsContext } from "../Steps/Steps.context";
 
 const Screenshooter: React.FC = () => {
-  const [imageName, setImageName] = useState("frontpage");
-  const [imageUrl, setImageUrl] = useState("www.gog.com");
+  const [testName, setTestName] = useState("frontpage");
+  const [testUrl, setTestUrl] = useState("www.gog.com");
 
   const [fullPageChecked, setFullPageChecked] = useState(false);
   const [blockImagesChecked, setBlockImagesChecked] = useState(false);
@@ -25,13 +25,13 @@ const Screenshooter: React.FC = () => {
 
   const steps = useContext(StepsContext).steps;
 
-  const shoot = async () => {
+  const shoot = () => {
     setIsDone(false);
     setLoading(true);
 
     const config = {
-      imageName,
-      imageUrl,
+      testName,
+      testUrl,
       steps,
       fullPageChecked,
       blockImagesChecked,
@@ -43,9 +43,22 @@ const Screenshooter: React.FC = () => {
         setIsDone(true);
         setLoading(false);
         setCacheKey(new Date().getTime());
-        setLastImage(imageName);
+        setLastImage(testName);
       });
-  }
+  };
+
+  const save = () => {
+    const config = {
+      testName,
+      testUrl,
+      steps
+    };
+
+    axios.post("/api/save", config)
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   const renderLastImage = () => {
     if (isDone && takeResultScreenshot) {
@@ -60,8 +73,8 @@ const Screenshooter: React.FC = () => {
   return (
     <div className="screenshooter-form">
 
-      <Input title="Image Name" value={imageName} setter={setImageName}/>
-      <Input title="URL" value={imageUrl} setter={setImageUrl}/>
+      <Input title="Test Name" value={testName} setter={setTestName}/>
+      <Input title="URL" value={testUrl} setter={setTestUrl}/>
 
       <Steps />
 
@@ -70,6 +83,11 @@ const Screenshooter: React.FC = () => {
       <button className="screenshooter-btn" onClick={shoot}>
         Run { steps.length ? "tasks" : "task" }
       </button>
+
+      <button className="screenshooter-btn" onClick={save}>
+        Save test
+      </button>
+
       <div className="options">
         OPTIONS
         <Checkbox
