@@ -14,6 +14,9 @@ const schema = buildSchema(`
     name: String
     url: String
     scenarios: [Scenario]
+    blockImagesChecked: Boolean
+    fullPageChecked: Boolean
+    takeResultScreenshot: Boolean
   }
 
   type Query {

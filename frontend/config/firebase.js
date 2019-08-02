@@ -18,7 +18,10 @@ const save = (config) => {
   firebaseApp.database().ref("/tests").push({
     name: config.testName,
     url: config.testUrl,
-    scenarios: config.steps
+    scenarios: config.steps,
+    fullPageChecked: config.fullPageChecked,
+    blockImagesChecked: config.blockImagesChecked,
+    takeResultScreenshot: config.takeResultScreenshot
   });
 };
 

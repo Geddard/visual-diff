@@ -47,6 +47,8 @@ const shoot = async (config) => {
                 await page.hover(`.${value}`);
             } else if (action === "CLICK") {
                 await page.click(`.${value}`);
+            } else if (action === "HOVER") {
+                await page.hover(`.${value}`);
             } else if (action === "WAIT") {
                 await page.waitFor(parseInt(value));
             } else if (action === "SCREENSHOT") {

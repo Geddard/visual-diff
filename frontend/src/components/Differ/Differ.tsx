@@ -15,6 +15,7 @@ const Differ: React.FC = () => {
   const [compareUrl, setCompareUrl] = useState("");
 
   const [diffReady, setDiffReady] = useState(false);
+  const [diffResult, setDiffResult] = useState(0);
 
   const [imagesReady, setImagesReady] = useState(false);
   const [imagesList, setImagesList] = useState();
@@ -35,7 +36,14 @@ const Differ: React.FC = () => {
     let content = null;
 
     if (diffReady) {
-      content = renderImg(`${sourceUrl.replace(".png", "")}-${compareUrl.replace(".png", "")}-diff.png`);
+      content = (
+        <div className="differ-form">
+          <div>
+            {"Difference in pixels " + diffResult}
+          </div>
+          {renderImg(`${sourceUrl.replace(".png", "")}-${compareUrl.replace(".png", "")}-diff.png`)}
+        </div>
+      );
     } else {
       content = (
         <div className="differ-form">
@@ -67,8 +75,9 @@ const Differ: React.FC = () => {
 
   const doDiff = () => {
     axios.post("/api/compare", {sourceUrl, compareUrl})
-      .then(() => {
+      .then((res) => {
         setDiffReady(true);
+        setDiffResult(res.data.diffResult);
       });
   }
 

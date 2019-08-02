@@ -15,6 +15,9 @@ interface ITest {
     name: string;
     url: string;
     scenarios: ITestScenario[]
+    blockImagesChecked: boolean;
+    fullPageChecked: boolean;
+    takeResultScreenshot: boolean;
 }
 
 const TestRunner: React.FC = () => {
@@ -26,6 +29,9 @@ const TestRunner: React.FC = () => {
       createApolloFetch({ uri: "/gql" })({
         query: `{
           tests {
+            blockImagesChecked
+            takeResultScreenshot
+            fullPageChecked
             name
             url
             scenarios {
@@ -63,6 +69,13 @@ const TestRunner: React.FC = () => {
               </div>
             );
           })}
+        </div>
+        <br/>
+        <div>
+          Options: <br/>
+          <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
+          <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
+          <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
         </div>
         <button onClick={() => runTest(test)}>Run test</button>
       </div>

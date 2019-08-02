@@ -9,17 +9,21 @@ const compare = (sourceUrl, compareUrl) => {
   const {width, height} = img1;
   const diff = new PNG({width, height});
 
-  pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
+  const diffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, {threshold: 0.1});
 
   fs.writeFileSync(
       `./public/${sourceUrl.replace('.png', '')}-${compareUrl.replace('.png', '')}-diff.png`,
       PNG.sync.write(diff)
   );
+
+  return diffPixels;
 };
 
 module.exports = (app) => {
   app.post('/api/compare', bodyParser.json(), (req, res) => {
-    compare(req.body.sourceUrl, req.body.compareUrl);
-    res.json("Done");
+    const diffResult = compare(req.body.sourceUrl, req.body.compareUrl);
+    res.json({
+      diffResult
+    });
   });
 };

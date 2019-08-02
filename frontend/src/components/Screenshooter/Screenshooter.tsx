@@ -51,7 +51,10 @@ const Screenshooter: React.FC = () => {
     const config = {
       testName,
       testUrl,
-      steps
+      steps,
+      fullPageChecked,
+      blockImagesChecked,
+      takeResultScreenshot
     };
 
     axios.post("/api/save", config)
