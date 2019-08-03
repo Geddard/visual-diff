@@ -1,14 +1,14 @@
-import React, { useState, useContext } from "react";
 import cloneDeep from "lodash-es/cloneDeep";
 import isEmpty from "lodash-es/isEmpty";
+import React, { useContext, useState } from "react";
 
 import "./Steps.css";
 
-import Select from "../Select/Select";
+import uniqueId from "lodash-es/uniqueId";
 import Checkbox from "../Checkbox/Checkbox";
 import Input from "../Input/Input";
+import Select from "../Select/Select";
 import { StepsContext } from "./Steps.context";
-import uniqueId from "lodash-es/uniqueId";
 
 enum OPTIONS {
   HOVER = "Hover",
@@ -25,7 +25,7 @@ enum ACTION_PAIRS {
   NAVIGATE = "URL",
   WAIT = "Time",
   FOCUS = "Element",
-  SCREENSHOT = ""
+  SCREENSHOT = "",
 }
 
 export interface IStepsConfig {
@@ -64,15 +64,15 @@ const Steps: React.FC = () => {
 
     newStepsConfig.push({
       action: "",
-      value: "",
-      id: `${newStepsConfig.length + 1}_${uniqueId()}`,
       crop: false,
-      cropTarget: ""
+      cropTarget: "",
+      id: `${newStepsConfig.length + 1}_${uniqueId()}`,
+      value: "",
     });
 
     setStepsConfig(newStepsConfig);
     context.setSteps(newStepsConfig);
-  }
+  };
 
   const removeStep = (index: number) => {
     const newStepsConfig = cloneDeep(stepsConfig);
@@ -80,7 +80,7 @@ const Steps: React.FC = () => {
 
     setStepsConfig(newStepsConfig);
     context.setSteps(newStepsConfig);
-  }
+  };
 
   const renderStepInput = (index: number) => {
     if (!isEmpty(stepsConfig[index])) {
@@ -126,7 +126,7 @@ const Steps: React.FC = () => {
 
       }
     }
-  }
+  };
 
   const updateConfig = (configUpdater: (newConfig: IStepsConfig[]) => void) => {
     const newConfig = cloneDeep(stepsConfig);
@@ -135,7 +135,7 @@ const Steps: React.FC = () => {
 
     setStepsConfig(newConfig);
     context.setSteps(newConfig);
-  }
+  };
 
   const changeStepAction = (index: number, action: string) => {
     const configUpdater = (newConfig: IStepsConfig[]) => {
@@ -143,7 +143,7 @@ const Steps: React.FC = () => {
     };
 
     updateConfig(configUpdater);
-  }
+  };
 
   const changeStepTarget = (index: number, target: string) => {
     const configUpdater = (newConfig: IStepsConfig[]) => {
@@ -151,7 +151,7 @@ const Steps: React.FC = () => {
     };
 
     updateConfig(configUpdater);
-  }
+  };
 
   const changeStepCropTo = (index: number, isChecked: boolean) => {
     const configUpdater = (newConfig: IStepsConfig[]) => {
@@ -159,7 +159,7 @@ const Steps: React.FC = () => {
     };
 
     updateConfig(configUpdater);
-  }
+  };
 
   const changeStepCropTarget = (index: number, target: string) => {
     const configUpdater = (newConfig: IStepsConfig[]) => {
@@ -167,7 +167,7 @@ const Steps: React.FC = () => {
     };
 
     updateConfig(configUpdater);
-  }
+  };
 
   return (
     <div className="steps">

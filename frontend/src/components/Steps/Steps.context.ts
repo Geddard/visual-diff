@@ -3,8 +3,8 @@ import { IStepsConfig } from "./Steps";
 
 export const StepsContext = createContext<{
     steps: IStepsConfig[],
-    setSteps: any
+    setSteps: any,
 }>({
+    setSteps: () => null,
     steps: [],
-    setSteps: () => {}
 });

@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import logo from "./logo.svg";
 
 import "./App.css";
 
-import Screenshooter from "./components/Screenshooter/Screenshooter";
 import Differ from "./components/Differ/Differ";
+import Screenshooter from "./components/Screenshooter/Screenshooter";
 import TestRunner from "./components/TestRunner/TestRunner";
 import Toggler from "./components/Toggler/Toggler";
 
@@ -12,9 +12,9 @@ import { StepsContext } from "./components/Steps/Steps.context";
 
 const App: React.FC = () => {
   const OPTIONS = {
-    SCREENSHOOTER: "Screenshooter",
     DIFFER: "Differ",
-    SAVED_TESTS: "Saved tests"
+    SAVED_TESTS: "Saved tests",
+    SCREENSHOOTER: "Screenshooter",
   };
   const defaultForm = OPTIONS.SCREENSHOOTER;
 
@@ -25,7 +25,7 @@ const App: React.FC = () => {
 
   const handleTogglerClick = (option: string) => {
     setActiveForm(option);
-  }
+  };
 
   const renderActiveForm = () => {
     let formToRender;
@@ -43,7 +43,7 @@ const App: React.FC = () => {
     }
 
     return formToRender;
-  }
+  };
 
   return (
     <div className="app">
@@ -59,6 +59,7 @@ const App: React.FC = () => {
         {renderActiveForm()}
       </Toggler>
     </div>
-)};
+  );
+};
 
 export default App;

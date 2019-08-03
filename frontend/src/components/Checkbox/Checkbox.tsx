@@ -1,22 +1,22 @@
-import React, { Dispatch, SetStateAction } from "react";
 import classnames from "classnames";
+import React, { Dispatch, SetStateAction } from "react";
 
 import "./Checkbox.css";
 
 type TSetter = Dispatch<SetStateAction<boolean>>;
 
-interface CheckboxProps {
+interface ICheckboxProps {
   name: string;
   label: string;
   setter: (...args: any[]) => void | TSetter;
   customClassName?: string;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({
+const Checkbox: React.FC<ICheckboxProps> = ({
   name,
   label,
   setter,
-  customClassName
+  customClassName,
 }) => {
 
   return (
@@ -31,7 +31,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         onChange={(e) => setter(e.target.checked)}
       />
     </div>
-  );  
+  );
 };
 
 export default Checkbox;

@@ -10,9 +10,9 @@ const debounce = (callback: (...args: any[]) => any, wait: number) => {
       callback(args);
       timerId = 0;
     }, wait);
-  }
+  };
 };
 
 export {
-  debounce
+  debounce,
 };

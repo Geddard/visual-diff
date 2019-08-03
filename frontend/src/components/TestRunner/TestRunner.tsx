@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
 import { createApolloFetch } from "apollo-fetch";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
 
 import "./TestRunner.css";
-import Axios from "axios";
 
 interface ITestScenario {
     action: string;
     value: string;
     crop: boolean;
-    cropTarget: string
+    cropTarget: string;
 }
 
 interface ITest {
     name: string;
     url: string;
-    scenarios: ITestScenario[]
+    scenarios: ITestScenario[];
     blockImagesChecked: boolean;
     fullPageChecked: boolean;
     takeResultScreenshot: boolean;
 }
 
 const TestRunner: React.FC = () => {
-  const [testList, setTestList] = useState([])
+  const [testList, setTestList] = useState([]);
   const [testsFetched, setTestsFetched] = useState(false);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const TestRunner: React.FC = () => {
         {renderScenarios(test)}
         <br/>
         <div>
-          Options: <br/> 
+          Options: <br/>
           <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
           <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
           <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
@@ -86,15 +86,15 @@ const TestRunner: React.FC = () => {
             );
           })}
         </div>
-      )
-    }    
+      );
+    }
   };
 
   const runTest = (test: ITest) => {
     Axios.post("/api/shoot", {
+        steps: test.scenarios,
         testName: test.name,
         testUrl: test.url,
-        steps: test.scenarios
     })
     .then(() => {
         alert("done");

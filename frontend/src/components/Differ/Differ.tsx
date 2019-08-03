@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import without from "lodash-es/without";
-import remove from "lodash-es/remove";
 import axios from "axios";
+import remove from "lodash-es/remove";
+import without from "lodash-es/without";
+import React, { useEffect, useState  } from "react";
 
 import "./Differ.css";
 
@@ -55,7 +55,7 @@ const Differ: React.FC = () => {
     }
 
     return content;
-  }
+  };
 
   const renderSourceSelector = () => {
     return (
@@ -71,7 +71,7 @@ const Differ: React.FC = () => {
     if (sourceSelected && compareSelected) {
       return <button className="diff-btn" onClick={() => doDiff()}>Diff it</button>
     }
-  }
+  };
 
   const doDiff = () => {
     axios.post("/api/compare", {sourceUrl, compareUrl})
@@ -79,7 +79,7 @@ const Differ: React.FC = () => {
         setDiffReady(true);
         setDiffResult(res.data.diffResult);
       });
-  }
+  };
 
   const renderCompareTo = () => {
     if (sourceSelected) {
@@ -117,18 +117,18 @@ const Differ: React.FC = () => {
   const selectImageHandler = (selectedImage: string) => {
     setSourceSelected(true);
     setSourceUrl(selectedImage);
-  }
+  };
 
   const selectCompareImageHandler = (selectedImage: string) => {
     setCompareSelected(true);
     setCompareUrl(selectedImage);
-  }
+  };
 
   const renderImg = (img: string) => {
     return <img className="differ__img-displayed" src={`/${img}`} alt={img}/>
-  }
+  };
 
   return renderContent();
-}
+};
 
 export default Differ;

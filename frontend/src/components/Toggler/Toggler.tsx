@@ -1,30 +1,30 @@
-import React, { useState } from "react";
 import classnames from "classnames";
+import React, { useState } from "react";
 
 import "./Toggler.css";
 
 type TToggleHandler = (option: string) => void;
-type TOptions ={
-  [key: string]: string
-};
-
-interface TogglerProps {
-  options: TOptions;
-  defaultOption?: string;
-  handler: TToggleHandler;
-  children?: JSX.Element
+interface IOptions {
+  [key: string]: string;
 }
 
-const Toggler: React.FC<TogglerProps> = ({
+interface ITogglerProps {
+  options: IOptions;
+  defaultOption?: string;
+  handler: TToggleHandler;
+  children?: JSX.Element;
+}
+
+const Toggler: React.FC<ITogglerProps> = ({
   options,
   defaultOption = "",
   handler,
-  children
+  children,
 }) => {
   const [activeOption, setActiveOption] = useState(defaultOption);
 
-  const renderOptions = (options: TOptions, handler: TToggleHandler) => {
-    return Object.values(options).map((option: string, index: number) => {
+  const renderOptions = (optionsToRender: IOptions, optionHandler: TToggleHandler) => {
+    return Object.values(optionsToRender).map((option: string, index: number) => {
       return (
         <button
           key={index}
@@ -44,8 +44,8 @@ const Toggler: React.FC<TogglerProps> = ({
 
   const getClassNames = (option: string) => {
     return classnames("toggler__option", {
-      "toggler__option--active": option === activeOption
-    })
+      "toggler__option--active": option === activeOption,
+    });
   }
 
   return (

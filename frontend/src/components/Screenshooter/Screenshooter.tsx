@@ -1,10 +1,10 @@
-import React, { useState, useContext } from "react";
 import axios from "axios";
+import React, { useContext, useState  } from "react";
 
 import "./Screenshooter.css";
 
-import Input from "../Input/Input";
 import Checkbox from "../Checkbox/Checkbox";
+import Input from "../Input/Input";
 import Steps from "../Steps/Steps";
 
 import { StepsContext } from "../Steps/Steps.context";
@@ -30,12 +30,12 @@ const Screenshooter: React.FC = () => {
     setLoading(true);
 
     const config = {
+      blockImagesChecked,
+      fullPageChecked,
+      steps,
+      takeResultScreenshot,
       testName,
       testUrl,
-      steps,
-      fullPageChecked,
-      blockImagesChecked,
-      takeResultScreenshot
     };
 
     axios.post("/api/shoot", config)
@@ -49,12 +49,12 @@ const Screenshooter: React.FC = () => {
 
   const save = () => {
     const config = {
+      blockImagesChecked,
+      fullPageChecked,
+      steps,
+      takeResultScreenshot,
       testName,
       testUrl,
-      steps,
-      fullPageChecked,
-      blockImagesChecked,
-      takeResultScreenshot
     };
 
     axios.post("/api/save", config)
@@ -119,6 +119,7 @@ const Screenshooter: React.FC = () => {
 
       {renderLastImage()}
     </div>
-)};
+  );
+};
 
 export default Screenshooter;

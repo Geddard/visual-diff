@@ -1,17 +1,17 @@
 import React from "react";
 
-interface SelectProps {
+interface ISelectProps {
   className?: string;
   options: string[];
   defaultOption?: string;
   onChangeHandler: (...args: any[]) => void
 }
 
-const Select: React.FC<SelectProps> = ({
+const Select: React.FC<ISelectProps> = ({
   className,
   options,
   defaultOption,
-  onChangeHandler
+  onChangeHandler,
 }) => {
 
   const renderOptions = () => {
@@ -20,9 +20,10 @@ const Select: React.FC<SelectProps> = ({
     ];
 
     if (options) {
-      return selectOptions.concat(options).map((option: string, index: number) => <option key={index}>{option}</option>)
+      return selectOptions.concat(options)
+        .map((option: string, index: number) => <option key={index}>{option}</option>);
     }
-  }
+  };
 
   return (
     <select
@@ -32,7 +33,6 @@ const Select: React.FC<SelectProps> = ({
       {renderOptions()}
     </select>
   );
-}
-
+};
 
 export default Select;
