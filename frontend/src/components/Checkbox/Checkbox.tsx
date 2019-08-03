@@ -20,18 +20,18 @@ const Checkbox: React.FC<CheckboxProps> = ({
 }) => {
 
   return (
-  <div className={classnames("checkbox", customClassName)}>
-    <label htmlFor={name} className="checkbox__label">
-      {label}
-    </label>
-    <input
-      type="checkbox"
-      name={name}
-      id={name}
-      onChange={(e) => setter(e.target.checked)}
-    />
-  </div>
-);
+    <div className={classnames("checkbox", customClassName)}>
+      <label htmlFor={name} className="checkbox__label">
+        {label}
+      </label>
+      <input
+        type="checkbox"
+        name={name}
+        id={name}
+        onChange={(e) => setter(e.target.checked)}
+      />
+    </div>
+  );  
 };
 
 export default Checkbox;

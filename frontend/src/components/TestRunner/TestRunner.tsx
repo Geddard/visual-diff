@@ -56,6 +56,22 @@ const TestRunner: React.FC = () => {
         <div>Test Name: {test.name}</div>
         <div>Initial URL: {test.url}</div>
         <br/>
+        {renderScenarios(test)}
+        <br/>
+        <div>
+          Options: <br/> 
+          <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
+          <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
+          <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
+        </div>
+        <button onClick={() => runTest(test)}>Run test</button>
+      </div>
+    );
+  };
+
+  const renderScenarios = (test: ITest) => {
+    if (test.scenarios) {
+      return (
         <div>
           Steps: <br/>
           {test.scenarios.map((scenario: ITestScenario, index: number) => {
@@ -70,16 +86,8 @@ const TestRunner: React.FC = () => {
             );
           })}
         </div>
-        <br/>
-        <div>
-          Options: <br/>
-          <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
-          <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
-          <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
-        </div>
-        <button onClick={() => runTest(test)}>Run test</button>
-      </div>
-    );
+      )
+    }    
   };
 
   const runTest = (test: ITest) => {

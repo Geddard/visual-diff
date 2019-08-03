@@ -34,7 +34,6 @@ const root = {
     .then(val => Object.keys(val).map(key => val[key]))
 };
 
-
 module.exports = (app) => {
   app.use('/gql', expressGql({
     schema: schema,

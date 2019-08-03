@@ -32,10 +32,10 @@ const shoot = async (config) => {
 
     await freeze(page);
 
-    if (config.steps.length) {
+    if (config.steps && config.steps.length) {
         let lastAction = "";
 
-        for (step of config.steps) {
+        for (const step of config.steps) {
             const action = step.action;
             const value = step.value;
 
