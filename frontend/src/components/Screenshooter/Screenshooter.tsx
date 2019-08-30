@@ -67,7 +67,7 @@ const Screenshooter: React.FC = () => {
     if (isDone && takeResultScreenshot) {
       return (
         <div className="imgage__wrapper">
-          <img className="screenshot" src={`/${lastImage}.png?cacheKey=${cacheKey}`} alt={lastImage}/>
+          <img className="screenshot" src={`/${lastImage}.jpg?cacheKey=${cacheKey}`} alt={lastImage}/>
         </div>
       );
     }

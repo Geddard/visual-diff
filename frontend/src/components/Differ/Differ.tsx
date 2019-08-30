@@ -41,7 +41,7 @@ const Differ: React.FC = () => {
           <div>
             {"Difference in pixels " + diffResult}
           </div>
-          {renderImg(`${sourceUrl.replace(".png", "")}-${compareUrl.replace(".png", "")}-diff.png`)}
+          {renderImg(`${sourceUrl.replace(".jpg", "")}-${compareUrl.replace(".jpg", "")}-diff.png`)}
         </div>
       );
     } else {

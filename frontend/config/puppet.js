@@ -7,7 +7,7 @@ const fs = require('fs');
 const checkForExistingFile = (fileName) => {
     fs.readdir('./public', (error, files) => {
         files.forEach(file => {
-            if (file.indexOf(`./public/${fileName}.png`) !== -1) {
+            if (file.indexOf(`./public/${fileName}.jpg`) !== -1) {
                 fs.unlinkSync(file);
             }
         });
@@ -53,7 +53,7 @@ const shoot = async (config) => {
                 await page.waitFor(parseInt(value));
             } else if (action === "SCREENSHOT") {
                 const ssConfig = {
-                    path: `./public/${config.testName}${lastAction}.png`,
+                    path: `./public/${config.testName}${lastAction}.jpg`,
                     fullPage: config.fullPageChecked
                 };
 
@@ -79,7 +79,7 @@ const shoot = async (config) => {
 
     if (config.takeResultScreenshot) {
         const screenshotConfig = {
-            path: `./public/${config.testName}.png`,
+            path: `./public/${config.testName}.jpg`,
             fullPage: config.fullPageChecked
         };
 
@@ -100,7 +100,7 @@ module.exports = (app) => {
             const images = [];
 
             files.forEach(file => {
-                if (/(.png)/.test(file)) {
+                if (/(.jpg)/.test(file)) {
                     images.push(file);
                 }
             });
