@@ -23,12 +23,12 @@ const Toggler: React.FC<ITogglerProps> = ({
 }) => {
   const [activeOption, setActiveOption] = useState(defaultOption);
 
-  const renderOptions = (optionsToRender: IOptions, optionHandler: TToggleHandler) => {
+  const renderOptions = (optionsToRender: IOptions) => {
     return Object.values(optionsToRender).map((option: string, index: number) => {
       return (
         <button
           key={index}
-          onClick={() => handleTogglerClick(handler, option)}
+          onClick={() => handleTogglerClick(option)}
           className={getClassNames(option)}
         >
           {option}
@@ -37,7 +37,7 @@ const Toggler: React.FC<ITogglerProps> = ({
     });
   };
 
-  const handleTogglerClick = (handler: TToggleHandler, option: string) => {
+  const handleTogglerClick = (option: string) => {
     setActiveOption(option);
     handler(option);
   };
@@ -46,18 +46,18 @@ const Toggler: React.FC<ITogglerProps> = ({
     return classnames("toggler__option", {
       "toggler__option--active": option === activeOption,
     });
-  }
+  };
 
   return (
     <div className="toggler__wrapper">
       <div className="toggler">
-        {(renderOptions(options, handler))}
+        {(renderOptions(options))}
       </div>
       <div className="toggler__children">
         {children}
       </div>
     </div>
   );
-}
+};
 
 export default Toggler;

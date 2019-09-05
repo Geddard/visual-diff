@@ -51,6 +51,8 @@ const shoot = async (config) => {
                 await page.hover(`.${value}`);
             } else if (action === "WAIT") {
                 await page.waitFor(parseInt(value));
+            } else if (action === "ENTER_TEXT") {
+                await page.type(`.${step.textTarget}`, value);
             } else if (action === "SCREENSHOT") {
                 const ssConfig = {
                     path: `./public/${config.testName}${lastAction}.jpg`,

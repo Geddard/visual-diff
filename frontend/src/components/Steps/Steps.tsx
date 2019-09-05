@@ -1,72 +1,62 @@
 import cloneDeep from "lodash-es/cloneDeep";
 import isEmpty from "lodash-es/isEmpty";
-import React, { useContext, useState } from "react";
-
-import "./Steps.css";
-
+import set from "lodash-es/set";
 import uniqueId from "lodash-es/uniqueId";
+import React, { useContext, useState } from "react";
+import { EXTRA_PARAMS, getInputText, getOptionByKey, hasExtraParam, options } from "./Steps.config";
+
 import Checkbox from "../Checkbox/Checkbox";
 import Input from "../Input/Input";
 import Select from "../Select/Select";
+
 import { StepsContext } from "./Steps.context";
+import "./Steps.css";
 
-enum OPTIONS {
-  HOVER = "Hover",
-  CLICK = "Click",
-  NAVIGATE = "Navigate",
-  WAIT = "Wait",
-  FOCUS = "Focus",
-  SCREENSHOT = "Screenshot"
-}
-
-enum ACTION_PAIRS {
-  HOVER = "Element",
-  CLICK = "Element",
-  NAVIGATE = "URL",
-  WAIT = "Time",
-  FOCUS = "Element",
-  SCREENSHOT = "",
-}
-
-export interface IStepsConfig {
+export interface IStep {
   action: string;
   value: string | number;
   id: string;
   crop?: boolean;
   cropTarget?: string;
+  textTarget?: string;
 }
 
 const Steps: React.FC = () => {
-  const [stepsConfig, setStepsConfig] = useState<IStepsConfig[]>([]);
+  const [stepsConfig, setStepsConfig] = useState<IStep[]>([]);
 
   const context = useContext(StepsContext);
+  const defaultStepsOption = {
+    text: "Select Action",
+    value: "",
+  };
 
-  const renderStep = (config: IStepsConfig, stepIndex: number) => {
+  const renderStep = (step: IStep, stepIndex: number) => {
     return (
-      <div className="step__container" key={config.id}>
+      <div className="step__container" key={step.id}>
 
         <button className="steps__remove" onClick={() => removeStep(stepIndex)}>X</button>
 
         <Select
-          defaultOption="Select Action"
+          defaultOption={defaultStepsOption}
           className="steps__select-action"
-          options={Object.values(OPTIONS)}
-          onChangeHandler={changeStepAction.bind(null, stepIndex)}
+          optionsWithValue={options}
+          onChangeHandler={changeHandler.bind(null, stepIndex, "action")}
         />
 
-        {renderStepInput(stepIndex)}
+        {renderStepAdditionals(stepIndex)}
       </div>
     );
-  }
+  };
 
   const addStep = () => {
     const newStepsConfig = cloneDeep(stepsConfig);
 
     newStepsConfig.push({
       action: "",
-      crop: false,
+      crop: false ,
       cropTarget: "",
       id: `${newStepsConfig.length + 1}_${uniqueId()}`,
+      textTarget: "",
       value: "",
     });
 
@@ -82,53 +72,86 @@ const Steps: React.FC = () => {
     context.setSteps(newStepsConfig);
   };
 
-  const renderStepInput = (index: number) => {
-    if (!isEmpty(stepsConfig[index])) {
-      const action = (stepsConfig[index].action as keyof typeof ACTION_PAIRS);
+  const renderExtraParam = (actionKey: string, index: number, actionPair: string | undefined) => {
+    const actionConfig = getOptionByKey(actionKey);
+    let extraParam;
+    let extraParamAdditional;
 
-      if (!isEmpty(ACTION_PAIRS[action])) {
-        return (
-          <span className="step__params">
+    if (!!actionConfig) {
+      if (actionConfig.extraParam === EXTRA_PARAMS.CROP) {
+        extraParam = (
+          <Checkbox
+            name="cropToElement"
+            setter={changeHandler.bind(null, index, "crop")}
+            label="Crop to element"
+            customClassName="step__crop"
+          />
+        );
+        extraParamAdditional = stepsConfig[index].crop
+          ? (
             <Input
-              title={ACTION_PAIRS[action]}
-              value={stepsConfig[index].value}
-              setter={changeStepTarget.bind(null, index)}
+              title={"Element"}
+              value={stepsConfig[index].cropTarget}
+              setter={changeHandler.bind(null, index, "cropTarget")}
               isInline
             />
-          </span>
+          )
+          : null;
+      } else if (actionConfig.extraParam === EXTRA_PARAMS.TYPE) {
+        extraParam = (
+          <Input
+            title={actionPair}
+            value={stepsConfig[index].value}
+            setter={changeHandler.bind(null, index, "value")}
+            isInline
+          />
         );
-      } else if (ACTION_PAIRS[action] === ACTION_PAIRS.SCREENSHOT) {
-        return (
-          <span className="step__params">
-
-            <Checkbox
-              name="cropToElement"
-              setter={changeStepCropTo.bind(null, index)}
-              label="Crop to element"
-              customClassName="step__crop"
-            />
-
-            {
-              stepsConfig[index].crop
-              ? (
-                <Input
-                  title={ACTION_PAIRS[action]}
-                  value={stepsConfig[index].cropTarget}
-                  setter={changeStepCropTarget.bind(null, index)}
-                  isInline
-                />
-                )
-              : null
-            }
-
-          </span>
+        extraParamAdditional = (
+          <Input
+            title={actionPair}
+            value={stepsConfig[index].textTarget}
+            setter={changeHandler.bind(null, index, "textTarget")}
+            isInline
+          />
         );
+      }
+    }
 
+    return (
+      <span className="step__params">
+        {extraParam}
+        {extraParamAdditional}
+      </span>
+    );
+  };
+
+  const renderRegularcontent = (index: number, actionPair: string | undefined) => {
+    return (
+      <Input
+        id={`${index}-${actionPair}`}
+        title={actionPair}
+        value={stepsConfig[index].value}
+        setter={changeHandler.bind(null, index, "value")}
+        isInline
+      />
+    );
+  };
+
+  const renderStepAdditionals = (index: number) => {
+    if (!isEmpty(stepsConfig[index])) {
+      const action = (stepsConfig[index].action);
+
+      if (!!action) {
+        const actionPair = getInputText(action);
+
+        return hasExtraParam(action)
+          ? renderExtraParam(action, index, actionPair)
+          : renderRegularcontent(index, actionPair);
       }
     }
   };
 
-  const updateConfig = (configUpdater: (newConfig: IStepsConfig[]) => void) => {
+  const updateConfig = (configUpdater: (newConfig: IStep[]) => void) => {
     const newConfig = cloneDeep(stepsConfig);
 
     configUpdater(newConfig);
@@ -137,33 +160,9 @@ const Steps: React.FC = () => {
     context.setSteps(newConfig);
   };
 
-  const changeStepAction = (index: number, action: string) => {
-    const configUpdater = (newConfig: IStepsConfig[]) => {
-      newConfig[index].action = action.toUpperCase();
-    };
-
-    updateConfig(configUpdater);
-  };
-
-  const changeStepTarget = (index: number, target: string) => {
-    const configUpdater = (newConfig: IStepsConfig[]) => {
-      newConfig[index].value = target;
-    };
-
-    updateConfig(configUpdater);
-  };
-
-  const changeStepCropTo = (index: number, isChecked: boolean) => {
-    const configUpdater = (newConfig: IStepsConfig[]) => {
-      newConfig[index].crop = isChecked;
-    };
-
-    updateConfig(configUpdater);
-  };
-
-  const changeStepCropTarget = (index: number, target: string) => {
-    const configUpdater = (newConfig: IStepsConfig[]) => {
-      newConfig[index].cropTarget = target;
+  const changeHandler = (index: number, configKey: keyof IStep, action: string) => {
+    const configUpdater = (newConfig: IStep[]) => {
+      set(newConfig[index], `${configKey}`, action);
     };
 
     updateConfig(configUpdater);
