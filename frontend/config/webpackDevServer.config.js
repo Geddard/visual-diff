@@ -74,7 +74,7 @@ module.exports = function(proxy, allowedHost) {
     // src/node_modules is not ignored to support absolute imports
     // https://github.com/facebook/create-react-app/issues/1065
     watchOptions: {
-      ignored: [/node_modules/, "/**/*.png"],
+      ignored: [/node_modules/, "/**/*.png", "/**/*.jpg"],
     },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
     https: protocol === 'https',
