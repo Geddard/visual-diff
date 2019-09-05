@@ -14,13 +14,16 @@ const checkForExistingFile = (fileName) => {
     });
 };
 
+const navigate = async (page, url) => {
+    await page.goto(`https://${url}`, { waituntil: "networkidle0" });
+}
+
 const shoot = async (config) => {
     const browser = await pptr.launch({
         defaultViewport: {
             width: config.width || 1360,
             height: config.height || 768
-        },
-        headless: false
+        }
     });
     const page = await browser.newPage();
 
@@ -29,7 +32,7 @@ const shoot = async (config) => {
         await blockImages(page);
     }
 
-    await page.goto(`https://${config.testUrl}`, { waituntil: "networkidle0" });
+    await navigate(page, config.testUrl);
 
     await freeze(page);
 
@@ -45,16 +48,17 @@ const shoot = async (config) => {
             }
 
             if (action === "HOVER") {
-                await page.hover(`${value}`);
+                await page.hover(value);
             } else if (action === "CLICK") {
-                await page.click(`${value}`);
+                await page.click(value);
             } else if (action === "HOVER") {
-                await page.hover(`${value}`);
+                await page.hover(value);
             } else if (action === "WAIT") {
                 await page.waitFor(parseInt(value));
             } else if (action === "ENTER_TEXT") {
-                await page.waitForSelector(`${step.textTarget}`);
-                await page.type(`${step.textTarget}`, value);
+                await page.type(step.textTarget, value);
+            } else if (action === "NAVIGATE") {
+                await navigate(page, value);
             } else if (action === "SCREENSHOT") {
                 const ssConfig = {
                     path: `./public/${config.testName}${lastAction}.jpg`,
