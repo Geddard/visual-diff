@@ -101,16 +101,16 @@ const Steps: React.FC = () => {
         extraParam = (
           <Input
             title={actionPair}
-            value={stepsConfig[index].value}
-            setter={changeHandler.bind(null, index, "value")}
+            value={stepsConfig[index].textTarget}
+            setter={changeHandler.bind(null, index, "textTarget")}
             isInline
           />
         );
         extraParamAdditional = (
           <Input
-            title={actionPair}
-            value={stepsConfig[index].textTarget}
-            setter={changeHandler.bind(null, index, "textTarget")}
+            title={"Element"}
+            value={stepsConfig[index].value}
+            setter={changeHandler.bind(null, index, "value")}
             isInline
           />
         );
