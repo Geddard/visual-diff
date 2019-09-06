@@ -73,7 +73,9 @@ const Steps: React.FC = () => {
       value: stepsConfig[stepIndex][actionField.setterValue] as string,
     };
 
-    return <actionField.type {...fieldProps}/>;
+    const Component = actionField.type as any;
+
+    return <Component {...fieldProps}/>;
   };
 
   const renderFileds = (actionKey: string, stepIndex: number) => {
