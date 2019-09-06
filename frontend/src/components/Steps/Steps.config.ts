@@ -1,14 +1,27 @@
-export enum EXTRA_PARAMS {
-    CROP = "CROP",
-    TYPE = "TYPE",
-    REPLACE = "REPLACE",
+export interface IStep {
+    action: string;
+    value: string | number;
+    id: string;
+    crop?: boolean;
+    cropTarget?: string;
+    textTarget?: string;
+    replaceTarget?: string;
 }
 
-interface IConfigOption {
+export type TFieldTypes = "Input" | "Checkbox";
+
+export interface IStepField {
+    type: TFieldTypes;
+    setterValue: keyof IStep;
+    title?: string;
+    isInline?: boolean;
+}
+
+export interface IConfigOption {
     actionKey: string;
     actionText: string;
     inputText?: string;
-    extraParam?: keyof typeof EXTRA_PARAMS;
+    fields?: IStepField[];
 }
 
 export const config: IConfigOption[] = [
@@ -20,40 +33,44 @@ export const config: IConfigOption[] = [
     {
         actionKey: "ENTER_TEXT",
         actionText: "Enter Text",
-        extraParam: EXTRA_PARAMS.TYPE,
-        inputText: "Element",
+        fields: [
+            {
+                isInline: true,
+                setterValue: "textTarget",
+                title: "Element",
+                type: "input",
+            },
+            {
+                isInline: true,
+                setterValue: "value",
+                title: "Text",
+                type: "input",
+            },
+        ],
     },
     {
         actionKey: "FOCUS",
         actionText: "Focus",
-        inputText: "Element",
     },
     {
         actionKey: "HOVER",
         actionText: "Hover",
-        inputText: "Element",
     },
     {
         actionKey: "NAVIGATE",
         actionText: "Navigate",
-        inputText: "URL",
     },
     {
         actionKey: "SCREENSHOT",
         actionText: "Screenshot",
-        extraParam: EXTRA_PARAMS.CROP,
-        inputText: "Element",
     },
     {
         actionKey: "WAIT",
         actionText: "Wait",
-        inputText: "Time",
     },
     {
         actionKey: "REPLACE",
         actionText: "Replace Content",
-        extraParam: EXTRA_PARAMS.REPLACE,
-        inputText: "Element",
     },
 ];
 
@@ -68,14 +85,8 @@ export const getOptionByKey = (actionKey: string) => {
     return config.find((configOption: IConfigOption) => configOption.actionKey === actionKey);
 };
 
-export const getInputText = (actionKey: string) => {
+export const hasFields = (actionKey: string) => {
     const option = getOptionByKey(actionKey);
 
-    return option && option.inputText;
-};
-
-export const hasExtraParam = (actionKey: string) => {
-    const option = getOptionByKey(actionKey);
-
-    return !!(option && option.extraParam);
+    return !!(option && option.fields && option.fields.length);
 };

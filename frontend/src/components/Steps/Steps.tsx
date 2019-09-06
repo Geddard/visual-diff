@@ -3,7 +3,7 @@ import isEmpty from "lodash-es/isEmpty";
 import set from "lodash-es/set";
 import uniqueId from "lodash-es/uniqueId";
 import React, { useContext, useState } from "react";
-import { EXTRA_PARAMS, getInputText, getOptionByKey, hasExtraParam, options } from "./Steps.config";
+import { getOptionByKey, hasFields, IStep, IStepField, options } from "./Steps.config";
 
 import Checkbox from "../Checkbox/Checkbox";
 import Input from "../Input/Input";
@@ -11,16 +11,6 @@ import Select from "../Select/Select";
 
 import { StepsContext } from "./Steps.context";
 import "./Steps.css";
-
-export interface IStep {
-  action: string;
-  value: string | number;
-  id: string;
-  crop?: boolean;
-  cropTarget?: string;
-  textTarget?: string;
-  replaceTarget?: string;
-}
 
 const Steps: React.FC = () => {
   const [stepsConfig, setStepsConfig] = useState<IStep[]>([]);
@@ -74,61 +64,47 @@ const Steps: React.FC = () => {
     context.setSteps(newStepsConfig);
   };
 
-  const renderInput = (title: string | undefined, value: keyof IStep, index: number, isInline: boolean = false) => {
-    const inputProps = {
-      isInline,
-      setter: changeHandler.bind(null, index, value),
-      title,
-      value: stepsConfig[index][value] as string,
+  const renderActionField = (stepIndex: number, actionField: IStepField, fieldIndex: number) => {
+    const fieldProps = {
+      isInline: actionField.isInline,
+      key: fieldIndex,
+      setter: changeHandler.bind(null, stepIndex, actionField.setterValue),
+      title: actionField.title,
+      value: stepsConfig[stepIndex][actionField.setterValue] as string,
     };
 
-    return (
-      <Input {...inputProps} />
-    );
+    return <actionField.type {...fieldProps}/>;
   };
 
-  const renderExtraParam = (actionKey: string, index: number, actionPair: string | undefined) => {
+  const renderFileds = (actionKey: string, stepIndex: number) => {
     const actionConfig = getOptionByKey(actionKey);
-    let extraParam;
-    let extraParamAdditional;
 
-    if (!!actionConfig) {
-      if (actionConfig.extraParam === EXTRA_PARAMS.CROP) {
-        extraParam = (
-          <Checkbox
-            name="cropToElement"
-            setter={changeHandler.bind(null, index, "crop")}
-            label="Crop to element"
-            customClassName="step__crop"
-          />
-        );
-        extraParamAdditional = stepsConfig[index].crop ? renderInput("Element", "cropTarget", index, true) : null;
-      } else if (actionConfig.extraParam === EXTRA_PARAMS.TYPE) {
-        extraParam = renderInput(actionPair, "textTarget", index, true);
-        extraParamAdditional = renderInput("Text", "value", index, true);
-      } else if (actionConfig.extraParam === EXTRA_PARAMS.REPLACE) {
-        extraParam = renderInput(actionPair, "replaceTarget", index, true);
-        extraParamAdditional = renderInput("Text", "value", index, true);
-      }
+    if (!!actionConfig && actionConfig.fields && actionConfig.fields.length) {
+      // if (actionConfig.extraParam === EXTRA_PARAMS.CROP) {
+      //   extraParam = (
+      //     <Checkbox
+      //       name="cropToElement"
+      //       setter={changeHandler.bind(null, index, "crop")}
+      //       label="Crop to element"
+      //       customClassName="step__crop"
+      //     />
+      //   );
+      //   extraParamAdditional = stepsConfig[index].crop ? renderInput("Element", "cropTarget", index, true) : null;
+      // } else if (actionConfig.extraParam === EXTRA_PARAMS.TYPE) {
+      //   extraParam = renderInput(actionPair, "textTarget", index, true);
+      //   extraParamAdditional = renderInput("Text", "value", index, true);
+      // } else if (actionConfig.extraParam === EXTRA_PARAMS.REPLACE) {
+      //   extraParam = renderInput(actionPair, "replaceTarget", index, true);
+      //   extraParamAdditional = renderInput("Text", "value", index, true);
+      // }
+
+
+      return (
+        <span className="step__params">
+          {actionConfig.fields.map(renderActionField.bind(null, stepIndex))}
+        </span>
+      );
     }
-
-    return (
-      <span className="step__params">
-        {extraParam}
-        {extraParamAdditional}
-      </span>
-    );
-  };
-
-  const renderRegularcontent = (index: number, actionPair: string | undefined) => {
-    return (
-      <Input
-        title={actionPair}
-        value={stepsConfig[index].value}
-        setter={changeHandler.bind(null, index, "value")}
-        isInline
-      />
-    );
   };
 
   const renderStepAdditionals = (index: number) => {
@@ -136,11 +112,7 @@ const Steps: React.FC = () => {
       const action = (stepsConfig[index].action);
 
       if (!!action) {
-        const actionPair = getInputText(action);
-
-        return hasExtraParam(action)
-          ? renderExtraParam(action, index, actionPair)
-          : renderRegularcontent(index, actionPair);
+        return hasFields(action) && renderFileds(action, index);
       }
     }
   };
