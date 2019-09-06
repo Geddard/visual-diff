@@ -19,6 +19,7 @@ export interface IStep {
   crop?: boolean;
   cropTarget?: string;
   textTarget?: string;
+  replaceTarget?: string;
 }
 
 const Steps: React.FC = () => {
@@ -56,6 +57,7 @@ const Steps: React.FC = () => {
       crop: false ,
       cropTarget: "",
       id: `${newStepsConfig.length + 1}_${uniqueId()}`,
+      replaceTarget: "",
       textTarget: "",
       value: "",
     });
@@ -108,7 +110,24 @@ const Steps: React.FC = () => {
         );
         extraParamAdditional = (
           <Input
-            title={"Element"}
+            title={"Text"}
+            value={stepsConfig[index].value}
+            setter={changeHandler.bind(null, index, "value")}
+            isInline
+          />
+        );
+      } else if (actionConfig.extraParam === EXTRA_PARAMS.REPLACE) {
+        extraParam = (
+          <Input
+            title={actionPair}
+            value={stepsConfig[index].replaceTarget}
+            setter={changeHandler.bind(null, index, "replaceTarget")}
+            isInline
+          />
+        );
+        extraParamAdditional = (
+          <Input
+            title={"Text"}
             value={stepsConfig[index].value}
             setter={changeHandler.bind(null, index, "value")}
             isInline
@@ -128,7 +147,6 @@ const Steps: React.FC = () => {
   const renderRegularcontent = (index: number, actionPair: string | undefined) => {
     return (
       <Input
-        id={`${index}-${actionPair}`}
         title={actionPair}
         value={stepsConfig[index].value}
         setter={changeHandler.bind(null, index, "value")}

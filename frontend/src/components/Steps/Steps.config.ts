@@ -1,6 +1,7 @@
 export enum EXTRA_PARAMS {
     CROP = "CROP",
     TYPE = "TYPE",
+    REPLACE = "REPLACE",
 }
 
 interface IConfigOption {
@@ -20,7 +21,7 @@ export const config: IConfigOption[] = [
         actionKey: "ENTER_TEXT",
         actionText: "Enter Text",
         extraParam: EXTRA_PARAMS.TYPE,
-        inputText: "Text",
+        inputText: "Element",
     },
     {
         actionKey: "FOCUS",
@@ -41,11 +42,18 @@ export const config: IConfigOption[] = [
         actionKey: "SCREENSHOT",
         actionText: "Screenshot",
         extraParam: EXTRA_PARAMS.CROP,
+        inputText: "Element",
     },
     {
         actionKey: "WAIT",
         actionText: "Wait",
         inputText: "Time",
+    },
+    {
+        actionKey: "REPLACE",
+        actionText: "Replace Content",
+        extraParam: EXTRA_PARAMS.REPLACE,
+        inputText: "Element",
     },
 ];
 

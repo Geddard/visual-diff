@@ -59,6 +59,10 @@ const shoot = async (config) => {
                 await page.type(step.textTarget, value);
             } else if (action === "NAVIGATE") {
                 await navigate(page, value);
+            } else if (action === "REPLACE") {
+                await page.evaluate((step, value) => {
+                    document.querySelector(step.replaceTarget).innerHTML = value;
+                }, step, value);
             } else if (action === "SCREENSHOT") {
                 const ssConfig = {
                     path: `./public/${config.testName}${lastAction}.jpg`,
@@ -67,17 +71,12 @@ const shoot = async (config) => {
 
                 if (step.crop && step.cropTarget) {
                     const element = await page.$(step.cropTarget);
-                    const bBox = await element.boundingBox();
+                    await element.screenshot(ssConfig);
+                } else {
+                    await page.screenshot(ssConfig);
 
-                    ssConfig.clip = {
-                        x: bBox.x,
-                        y: bBox.y,
-                        width: bBox.width,
-                        height: bBox.height
-                    };
                 }
 
-                await page.screenshot(ssConfig);
             }
         }
     }
