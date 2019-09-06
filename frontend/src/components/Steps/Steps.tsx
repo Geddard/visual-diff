@@ -74,6 +74,19 @@ const Steps: React.FC = () => {
     context.setSteps(newStepsConfig);
   };
 
+  const renderInput = (title: string | undefined, value: keyof IStep, index: number, isInline: boolean = false) => {
+    const inputProps = {
+      isInline,
+      setter: changeHandler.bind(null, index, value),
+      title,
+      value: stepsConfig[index][value] as string,
+    };
+
+    return (
+      <Input {...inputProps} />
+    );
+  };
+
   const renderExtraParam = (actionKey: string, index: number, actionPair: string | undefined) => {
     const actionConfig = getOptionByKey(actionKey);
     let extraParam;
@@ -89,50 +102,13 @@ const Steps: React.FC = () => {
             customClassName="step__crop"
           />
         );
-        extraParamAdditional = stepsConfig[index].crop
-          ? (
-            <Input
-              title={"Element"}
-              value={stepsConfig[index].cropTarget}
-              setter={changeHandler.bind(null, index, "cropTarget")}
-              isInline
-            />
-          )
-          : null;
+        extraParamAdditional = stepsConfig[index].crop ? renderInput("Element", "cropTarget", index, true) : null;
       } else if (actionConfig.extraParam === EXTRA_PARAMS.TYPE) {
-        extraParam = (
-          <Input
-            title={actionPair}
-            value={stepsConfig[index].textTarget}
-            setter={changeHandler.bind(null, index, "textTarget")}
-            isInline
-          />
-        );
-        extraParamAdditional = (
-          <Input
-            title={"Text"}
-            value={stepsConfig[index].value}
-            setter={changeHandler.bind(null, index, "value")}
-            isInline
-          />
-        );
+        extraParam = renderInput(actionPair, "textTarget", index, true);
+        extraParamAdditional = renderInput("Text", "value", index, true);
       } else if (actionConfig.extraParam === EXTRA_PARAMS.REPLACE) {
-        extraParam = (
-          <Input
-            title={actionPair}
-            value={stepsConfig[index].replaceTarget}
-            setter={changeHandler.bind(null, index, "replaceTarget")}
-            isInline
-          />
-        );
-        extraParamAdditional = (
-          <Input
-            title={"Text"}
-            value={stepsConfig[index].value}
-            setter={changeHandler.bind(null, index, "value")}
-            isInline
-          />
-        );
+        extraParam = renderInput(actionPair, "replaceTarget", index, true);
+        extraParamAdditional = renderInput("Text", "value", index, true);
       }
     }
 
