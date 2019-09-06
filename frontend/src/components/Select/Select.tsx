@@ -9,7 +9,7 @@ interface ISelectProps {
   options?: string[];
   optionsWithValue?: IOptionWithValue[];
   defaultOption?: string | IOptionWithValue;
-  onChangeHandler: (...args: any[]) => void
+  onChangeHandler: (...args: any[]) => void;
 }
 
 const Select: React.FC<ISelectProps> = ({
@@ -21,7 +21,7 @@ const Select: React.FC<ISelectProps> = ({
 }) => {
 
   const renderOptions = () => {
-    let optionsToRender: any[] = [];
+    let optionsToRender: JSX.Element[] = [];
 
     if (options) {
       optionsToRender = [defaultOption as string || "Select"].concat(options)

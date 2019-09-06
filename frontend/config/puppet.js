@@ -4,7 +4,7 @@ const freeze = require('./util/freeze');
 const blockImages = require('./util/blockImages');
 const fs = require('fs');
 
-const checkForExistingFile = (fileName) => {
+const checkForExistingFile = async (fileName) => {
     fs.readdir('./public', (error, files) => {
         files.forEach(file => {
             if (file.indexOf(`./public/${fileName}.jpg`) !== -1) {
@@ -66,7 +66,7 @@ const shoot = async (config) => {
                 };
 
                 if (step.crop && step.cropTarget) {
-                    const element = await page.$(`${step.cropTarget}`);
+                    const element = await page.$(step.cropTarget);
                     const bBox = await element.boundingBox();
 
                     ssConfig.clip = {
@@ -99,8 +99,12 @@ const shoot = async (config) => {
 
 module.exports = (app) => {
     app.post('/api/shoot', bodyParser.json(), async (req, res) => {
-        await shoot(req.body);
-        res.json("Done");
+        try {
+            await shoot(req.body);
+            res.json("Done");
+        } catch (error) {
+            res.status(500).json(`Something went wrong: ${error}`, )
+        };
     });
 
     app.get('/api/images', (req, res) => {
