@@ -7,7 +7,7 @@ type TSetter = Dispatch<SetStateAction<boolean>>;
 
 interface ICheckboxProps {
   name: string;
-  label: string;
+  label: string | undefined;
   setter: (...args: any[]) => void | TSetter;
   customClassName?: string;
 }

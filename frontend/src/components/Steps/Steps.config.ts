@@ -1,92 +1,147 @@
+export type TFieldTypes = "input" | "checkbox";
+
 export interface IStep {
-    action: string;
-    value: string | number;
-    id: string;
-    crop?: boolean;
-    cropTarget?: string;
-    textTarget?: string;
-    replaceTarget?: string;
+  action: string;
+  value: string | number;
+  id: string;
+  crop?: boolean;
+  cropTarget?: string;
+  textTarget?: string;
+  replaceTarget?: string;
 }
 
-export type TFieldTypes = "Input" | "Checkbox";
-
 export interface IStepField {
-    type: TFieldTypes;
-    setterValue: keyof IStep;
-    title?: string;
-    isInline?: boolean;
+  customClassName?: string;
+  type: TFieldTypes;
+  setterValue: keyof IStep;
+  title?: string;
+  isInline?: boolean;
 }
 
 export interface IConfigOption {
-    actionKey: string;
-    actionText: string;
-    inputText?: string;
-    fields?: IStepField[];
+  actionKey: string;
+  actionText: string;
+  inputText?: string;
+  fields?: IStepField[];
 }
 
-export const config: IConfigOption[] = [
-    {
-        actionKey: "CLICK",
-        actionText: "Click",
-        inputText: "Element",
-    },
-    {
-        actionKey: "ENTER_TEXT",
-        actionText: "Enter Text",
-        fields: [
-            {
-                isInline: true,
-                setterValue: "textTarget",
-                title: "Element",
-                type: "Input",
-            },
-            {
-                isInline: true,
-                setterValue: "value",
-                title: "Text",
-                type: "Input",
-            },
-        ],
-    },
-    {
-        actionKey: "FOCUS",
-        actionText: "Focus",
-    },
-    {
-        actionKey: "HOVER",
-        actionText: "Hover",
-    },
-    {
-        actionKey: "NAVIGATE",
-        actionText: "Navigate",
-    },
-    {
-        actionKey: "SCREENSHOT",
-        actionText: "Screenshot",
-    },
-    {
-        actionKey: "WAIT",
-        actionText: "Wait",
-    },
-    {
-        actionKey: "REPLACE",
-        actionText: "Replace Content",
-    },
+export const config: IConfigOption[] = [{
+    actionKey: "CLICK",
+    actionText: "Click",
+    fields: [{
+      isInline: true,
+      setterValue: "value",
+      title: "Element",
+      type: "input",
+    }],
+  },
+  {
+    actionKey: "ENTER_TEXT",
+    actionText: "Enter Text",
+    fields: [{
+        isInline: true,
+        setterValue: "textTarget",
+        title: "Element",
+        type: "input",
+      },
+      {
+        isInline: true,
+        setterValue: "value",
+        title: "Text",
+        type: "input",
+      },
+    ],
+  },
+  {
+    actionKey: "FOCUS",
+    actionText: "Focus",
+    fields: [{
+      isInline: true,
+      setterValue: "value",
+      title: "Element",
+      type: "input",
+    }],
+  },
+  {
+    actionKey: "HOVER",
+    actionText: "Hover",
+    fields: [{
+      isInline: true,
+      setterValue: "value",
+      title: "Element",
+      type: "input",
+    }],
+  },
+  {
+    actionKey: "NAVIGATE",
+    actionText: "Navigate",
+    fields: [{
+      isInline: true,
+      setterValue: "value",
+      title: "URL",
+      type: "input",
+    }],
+  },
+  {
+    actionKey: "SCREENSHOT",
+    actionText: "Screenshot",
+    fields: [{
+        customClassName: "step__crop",
+        isInline: true,
+        setterValue: "crop",
+        title: "Crop to element",
+        type: "checkbox",
+      },
+      {
+        isInline: true,
+        setterValue: "cropTarget",
+        title: "Element",
+        type: "input",
+      },
+    ],
+  },
+  {
+    actionKey: "WAIT",
+    actionText: "Wait",
+    fields: [{
+      isInline: true,
+      setterValue: "value",
+      title: "Time",
+      type: "input",
+    }],
+  },
+  {
+    actionKey: "REPLACE",
+    actionText: "Replace Content",
+    fields: [{
+        isInline: true,
+        setterValue: "replaceTarget",
+        title: "Element",
+        type: "input",
+      },
+      {
+        isInline: true,
+        setterValue: "value",
+        title: "Text",
+        type: "input",
+      },
+    ],
+  },
 ];
 
 export const options = config.map((option: IConfigOption) => {
-    return {
-        text: option.actionText,
-        value: option.actionKey,
-    };
+  return {
+    text: option.actionText,
+    value: option.actionKey,
+  };
 });
 
 export const getOptionByKey = (actionKey: string) => {
-    return config.find((configOption: IConfigOption) => configOption.actionKey === actionKey);
+  return config.find((configOption: IConfigOption) => configOption.actionKey === actionKey);
 };
 
 export const hasFields = (actionKey: string) => {
-    const option = getOptionByKey(actionKey);
+  const option = getOptionByKey(actionKey);
 
-    return !!(option && option.fields && option.fields.length);
+  return !!(option && option.fields && option.fields.length);
 };

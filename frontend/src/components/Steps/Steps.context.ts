@@ -1,10 +1,12 @@
 import { createContext } from "react";
 import { IStep } from "./Steps.config";
 
-export const StepsContext = createContext<{
-    steps: IStep[],
-    setSteps: any,
-}>({
+interface IStepsContext {
+    steps: IStep[];
+    setSteps: any;
+}
+
+export const StepsContext = createContext<IStepsContext>({
     setSteps: () => null,
     steps: [],
 });

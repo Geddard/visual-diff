@@ -3,7 +3,13 @@ import isEmpty from "lodash-es/isEmpty";
 import set from "lodash-es/set";
 import uniqueId from "lodash-es/uniqueId";
 import React, { useContext, useState } from "react";
-import { getOptionByKey, hasFields, IStep, IStepField, options } from "./Steps.config";
+import {
+  getOptionByKey,
+  hasFields,
+  IStep,
+  IStepField,
+  options,
+} from "./Steps.config";
 
 import Checkbox from "../Checkbox/Checkbox";
 import Input from "../Input/Input";
@@ -19,6 +25,11 @@ const Steps: React.FC = () => {
   const defaultStepsOption = {
     text: "Select Action",
     value: "",
+  };
+
+  const tagTypes = {
+    checkbox: Checkbox,
+    input: Input,
   };
 
   const renderStep = (step: IStep, stepIndex: number) => {
@@ -66,14 +77,17 @@ const Steps: React.FC = () => {
 
   const renderActionField = (stepIndex: number, actionField: IStepField, fieldIndex: number) => {
     const fieldProps = {
+      customClassName: actionField.customClassName,
       isInline: actionField.isInline,
       key: fieldIndex,
+      label: actionField.title,
+      name: actionField.setterValue,
       setter: changeHandler.bind(null, stepIndex, actionField.setterValue),
       title: actionField.title,
       value: stepsConfig[stepIndex][actionField.setterValue] as string,
     };
 
-    const Component = actionField.type as any;
+    const Component = tagTypes[actionField.type];
 
     return <Component {...fieldProps}/>;
   };
@@ -82,25 +96,6 @@ const Steps: React.FC = () => {
     const actionConfig = getOptionByKey(actionKey);
 
     if (!!actionConfig && actionConfig.fields && actionConfig.fields.length) {
-      // if (actionConfig.extraParam === EXTRA_PARAMS.CROP) {
-      //   extraParam = (
-      //     <Checkbox
-      //       name="cropToElement"
-      //       setter={changeHandler.bind(null, index, "crop")}
-      //       label="Crop to element"
-      //       customClassName="step__crop"
-      //     />
-      //   );
-      //   extraParamAdditional = stepsConfig[index].crop ? renderInput("Element", "cropTarget", index, true) : null;
-      // } else if (actionConfig.extraParam === EXTRA_PARAMS.TYPE) {
-      //   extraParam = renderInput(actionPair, "textTarget", index, true);
-      //   extraParamAdditional = renderInput("Text", "value", index, true);
-      // } else if (actionConfig.extraParam === EXTRA_PARAMS.REPLACE) {
-      //   extraParam = renderInput(actionPair, "replaceTarget", index, true);
-      //   extraParamAdditional = renderInput("Text", "value", index, true);
-      // }
-
-
       return (
         <span className="step__params">
           {actionConfig.fields.map(renderActionField.bind(null, stepIndex))}
