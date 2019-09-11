@@ -9,10 +9,9 @@ import {
   IStep,
   IStepField,
   options,
+  tagTypes,
 } from "./Steps.config";
 
-import Checkbox from "../Checkbox/Checkbox";
-import Input from "../Input/Input";
 import Select from "../Select/Select";
 
 import { StepsContext } from "./Steps.context";
@@ -25,11 +24,6 @@ const Steps: React.FC = () => {
   const defaultStepsOption = {
     text: "Select Action",
     value: "",
-  };
-
-  const tagTypes = {
-    checkbox: Checkbox,
-    input: Input,
   };
 
   const renderStep = (step: IStep, stepIndex: number) => {

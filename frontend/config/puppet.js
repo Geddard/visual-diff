@@ -26,6 +26,7 @@ const shoot = async (config) => {
         }
     });
     const page = await browser.newPage();
+    const evidence = [];
 
     if (config.blockImagesChecked) {
         await page.setRequestInterception(true);
@@ -86,17 +87,20 @@ const shoot = async (config) => {
                     })
                 }, step);
             } else if (action === "SCREENSHOT") {
+                const ssImageName = `${config.testName}${lastAction || "_ss"}.jpg`;
                 const ssConfig = {
-                    path: `./public/${config.testName}${lastAction}.jpg`,
+                    path: `./public/${ssImageName}`,
                     fullPage: config.fullPageChecked
                 };
 
                 if (step.crop && step.cropTarget) {
                     const element = await page.$(step.cropTarget);
-                    await element.screenshot(ssConfig);
+                    await element.screenshot(ssConfig).then(() => {
+                        evidence.push(ssImageName);
+                    });
                 } else {
                     await page.screenshot(ssConfig);
-
+                    evidence.push(ssImageName);
                 }
 
             }
@@ -107,22 +111,26 @@ const shoot = async (config) => {
 
 
     if (config.takeResultScreenshot) {
+        const finalSSName = `${config.testName}.jpg`;
         const screenshotConfig = {
-            path: `./public/${config.testName}.jpg`,
+            path: `./public/${finalSSName}`,
             fullPage: config.fullPageChecked
         };
 
         await page.screenshot(screenshotConfig);
+        evidence.push(finalSSName);
     }
 
     await browser.close();
+
+    return evidence;
 };
 
 module.exports = (app) => {
     app.post('/api/shoot', bodyParser.json(), async (req, res) => {
         try {
-            await shoot(req.body);
-            res.json("Done");
+            const evidence = await shoot(req.body);
+            res.json(evidence);
         } catch (error) {
             res.status(500).json(`Something went wrong: ${error}`, )
         };

@@ -3,8 +3,24 @@
   margin: 0 20px;
 }
 
+.screenshot-gallery {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+
 .screenshot {
-  max-width: 100%;
+  cursor: pointer;
+  max-width: 400px;
+  margin-bottom: 30px;
+}
+
+.screenshot-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.screenshot-title {
   margin-bottom: 30px;
 }
 

@@ -17,7 +17,7 @@ const Screenshooter: React.FC = () => {
   const [blockImagesChecked, setBlockImagesChecked] = useState(false);
   const [takeResultScreenshot, setTakeResultScreenshot] = useState(false);
 
-  const [lastImage, setLastImage] = useState("");
+  const [evidence, setEvidence] = useState([]);
   const [cacheKey, setCacheKey] = useState(0);
 
   const [isDone, setIsDone] = useState(false);
@@ -39,11 +39,11 @@ const Screenshooter: React.FC = () => {
     };
 
     axios.post("/api/shoot", config)
-      .then(() => {
+      .then((res) => {
         setIsDone(true);
         setLoading(false);
         setCacheKey(new Date().getTime());
-        setLastImage(testName);
+        setEvidence(res.data);
       });
   };
 
@@ -59,15 +59,31 @@ const Screenshooter: React.FC = () => {
 
     axios.post("/api/save", config)
       .then((res) => {
-        console.log(res);
+        alert(res);
       });
   };
 
-  const renderLastImage = () => {
-    if (isDone && takeResultScreenshot) {
+  const renderImage = (image: string) => {
+    return (
+      <div className="screenshot-wrapper">
+        <span className="screenshot-title">
+          {image.split(".jpg")[0]}
+        </span>
+        <img
+          className="screenshot"
+          src={`/${image}?cacheKey=${cacheKey}`}
+          alt={image}
+          onClick={() => window.open(`/${image}`, "_blank")}
+        />
+      </div>
+    );
+  };
+
+  const renderEvidence = () => {
+    if (isDone && evidence.length) {
       return (
-        <div className="imgage__wrapper">
-          <img className="screenshot" src={`/${lastImage}.jpg?cacheKey=${cacheKey}`} alt={lastImage}/>
+        <div className="screenshot-gallery">
+          {evidence.map(renderImage)}
         </div>
       );
     }
@@ -117,7 +133,7 @@ const Screenshooter: React.FC = () => {
 
       {isDone ? <p>Done!</p> : null}
 
-      {renderLastImage()}
+      {renderEvidence()}
     </div>
   );
 };

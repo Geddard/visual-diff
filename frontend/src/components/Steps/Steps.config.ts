@@ -1,4 +1,12 @@
+import Checkbox from "../Checkbox/Checkbox";
+import Input from "../Input/Input";
+
 export type TFieldTypes = "input" | "checkbox";
+
+export const tagTypes = {
+  checkbox: Checkbox,
+  input: Input,
+};
 
 export interface IStep {
   action: string;
