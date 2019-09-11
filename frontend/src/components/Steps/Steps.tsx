@@ -59,6 +59,7 @@ const Steps: React.FC = () => {
       cropTarget: "",
       id: `${newStepsConfig.length + 1}_${uniqueId()}`,
       replaceTarget: "",
+      replaceTargetAll: "",
       textTarget: "",
       value: "",
     });

@@ -54,7 +54,11 @@ const shoot = async (config) => {
             } else if (action === "HOVER") {
                 await page.hover(value);
             } else if (action === "WAIT") {
-                await page.waitFor(parseInt(value));
+                if (parseInt(value)) {
+                    await page.waitFor(parseInt(value));
+                } else {
+                    await page.waitFor(() => !!document.querySelector(value), value);
+                }
             } else if (action === "ENTER_TEXT") {
                 await page.type(step.textTarget, value);
             } else if (action === "NAVIGATE") {
@@ -63,6 +67,24 @@ const shoot = async (config) => {
                 await page.evaluate((step, value) => {
                     document.querySelector(step.replaceTarget).innerHTML = value;
                 }, step, value);
+            } else if (action === "REPLACE_ALL") {
+                await page.evaluate((step, value) => {
+                    document.querySelectorAll(step.replaceTargetAll).forEach((element) => {
+                        element.innerHTML = value;
+                    });
+                }, step, value);
+            } else if (action === "HIDE") {
+                await page.evaluate((step) => {
+                    const list = step.hideTargets.split(",");
+                    console.log(list)
+                    list.forEach((selector) => {
+                        const trimmed = selector.trim();
+                        console.log(trimmed)
+                        document.querySelectorAll(trimmed).forEach((element) => {
+                            element.style.visibility = "hidden";
+                        });
+                    })
+                }, step);
             } else if (action === "SCREENSHOT") {
                 const ssConfig = {
                     path: `./public/${config.testName}${lastAction}.jpg`,

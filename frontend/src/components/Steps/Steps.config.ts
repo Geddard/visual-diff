@@ -6,8 +6,10 @@ export interface IStep {
   id: string;
   crop?: boolean;
   cropTarget?: string;
+  hideTargets?: string;
   textTarget?: string;
   replaceTarget?: string;
+  replaceTargetAll?: string;
 }
 
 export interface IStepField {
@@ -106,7 +108,7 @@ export const config: IConfigOption[] = [{
     fields: [{
       isInline: true,
       setterValue: "value",
-      title: "Time",
+      title: "Time/Selector",
       type: "input",
     }],
   },
@@ -123,6 +125,34 @@ export const config: IConfigOption[] = [{
         isInline: true,
         setterValue: "value",
         title: "Text",
+        type: "input",
+      },
+    ],
+  },
+  {
+    actionKey: "REPLACE_ALL",
+    actionText: "Replace Content (all matches)",
+    fields: [{
+        isInline: true,
+        setterValue: "replaceTargetAll",
+        title: "Element",
+        type: "input",
+      },
+      {
+        isInline: true,
+        setterValue: "value",
+        title: "Text",
+        type: "input",
+      },
+    ],
+  },
+  {
+    actionKey: "HIDE",
+    actionText: "Hide Elements",
+    fields: [{
+        isInline: true,
+        setterValue: "hideTargets",
+        title: "Elements",
         type: "input",
       },
     ],
