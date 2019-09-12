@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const freeze = require('../util/freeze');
 const blockImages = require('../util/blockImages');
 const fs = require('fs');
-const commandManager = require("./commandManager");
+const commandManager = require("./commands/commandManager");
 
 const checkForExistingFile = async (fileName) => {
     fs.readdir('./public', (error, files) => {
@@ -36,18 +36,12 @@ const shoot = async (config) => {
     await freeze(page);
 
     if (config.steps && config.steps.length) {
-        let lastAction = "";
 
         for (const step of config.steps) {
             const action = step.action;
             const stepConfig = Object.assign({}, step, {
                 testName: config.testName,
-                lastAction
             });
-
-            if (action !== "SCREENSHOT" && action !== "WAIT") {
-                lastAction = `_${action.toLowerCase()}`
-            }
 
             const results = await commands[action](stepConfig);
 

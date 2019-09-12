@@ -63,9 +63,9 @@ const Screenshooter: React.FC = () => {
       });
   };
 
-  const renderImage = (image: string) => {
+  const renderImage = (image: string, index: number) => {
     return (
-      <div className="screenshot-wrapper">
+      <div className="screenshot-wrapper" key={index}>
         <span className="screenshot-title">
           {image.split(".jpg")[0]}
         </span>
