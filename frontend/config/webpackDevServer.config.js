@@ -7,7 +7,7 @@ const ignoredFiles = require('react-dev-utils/ignoredFiles');
 const paths = require('./paths');
 const fs = require('fs');
 
-const puppet = require('../config/puppet');
+const puppet = require('../config/puppet/puppet');
 const pixelMatch = require('../config/pixelMatch');
 const gql = require('../config/graphql');
 const firebase = require('../config/firebase');
