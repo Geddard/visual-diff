@@ -13,6 +13,4 @@ const debounce = (callback: (...args: any[]) => any, wait: number) => {
   };
 };
 
-export {
-  debounce,
-};
+export { debounce };

@@ -12,24 +12,23 @@ interface ISelectProps {
   onChangeHandler: (...args: any[]) => void;
 }
 
-const Select: React.FC<ISelectProps> = ({
-  className,
-  options,
-  optionsWithValue,
-  defaultOption,
-  onChangeHandler,
-}) => {
-
+const Select: React.FC<ISelectProps> = ({ className, options, optionsWithValue, defaultOption, onChangeHandler }) => {
   const renderOptions = () => {
     let optionsToRender: JSX.Element[] = [];
 
     if (options) {
-      optionsToRender = [defaultOption as string || "Select"].concat(options)
+      optionsToRender = [(defaultOption as string) || "Select"]
+        .concat(options)
         .map((option: string, index: number) => <option key={index}>{option}</option>);
     } else if (optionsWithValue) {
-      optionsToRender = [defaultOption as IOptionWithValue || {text: "Select", value: ""}].concat(optionsWithValue)
+      optionsToRender = [(defaultOption as IOptionWithValue) || { text: "Select", value: "" }]
+        .concat(optionsWithValue)
         .map((option: IOptionWithValue, index: number) => {
-          return <option key={index} value={option.value}>{option.text}</option>;
+          return (
+            <option key={index} value={option.value}>
+              {option.text}
+            </option>
+          );
         });
     }
 
@@ -37,10 +36,7 @@ const Select: React.FC<ISelectProps> = ({
   };
 
   return (
-    <select
-      className={className}
-      onChange={(event) => onChangeHandler(event.target.value)}
-    >
+    <select className={className} onChange={event => onChangeHandler(event.target.value)}>
       {renderOptions()}
     </select>
   );

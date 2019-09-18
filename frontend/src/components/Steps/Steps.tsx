@@ -3,14 +3,7 @@ import isEmpty from "lodash-es/isEmpty";
 import set from "lodash-es/set";
 import uniqueId from "lodash-es/uniqueId";
 import React, { useContext, useState } from "react";
-import {
-  getOptionByKey,
-  hasFields,
-  IStep,
-  IStepField,
-  options,
-  tagTypes,
-} from "./Steps.config";
+import { getOptionByKey, hasFields, IStep, IStepField, options, tagTypes } from "./Steps.config";
 
 import Select from "../Select/Select";
 
@@ -23,14 +16,15 @@ const Steps: React.FC = () => {
   const context = useContext(StepsContext);
   const defaultStepsOption = {
     text: "Select Action",
-    value: "",
+    value: ""
   };
 
   const renderStep = (step: IStep, stepIndex: number) => {
     return (
       <div className="step__container" key={step.id}>
-
-        <button className="steps__remove" onClick={() => removeStep(stepIndex)}>X</button>
+        <button className="steps__remove" onClick={() => removeStep(stepIndex)}>
+          X
+        </button>
 
         <Select
           defaultOption={defaultStepsOption}
@@ -49,13 +43,13 @@ const Steps: React.FC = () => {
 
     newStepsConfig.push({
       action: "",
-      crop: false ,
+      crop: false,
       cropTarget: "",
       id: `${newStepsConfig.length + 1}_${uniqueId()}`,
       replaceTarget: "",
       replaceTargetAll: "",
       textTarget: "",
-      value: "",
+      value: ""
     });
 
     setStepsConfig(newStepsConfig);
@@ -79,29 +73,25 @@ const Steps: React.FC = () => {
       name: actionField.setterValue,
       setter: changeHandler.bind(null, stepIndex, actionField.setterValue),
       title: actionField.title,
-      value: stepsConfig[stepIndex][actionField.setterValue] as string,
+      value: stepsConfig[stepIndex][actionField.setterValue] as string
     };
 
     const Component = tagTypes[actionField.type];
 
-    return <Component {...fieldProps}/>;
+    return <Component {...fieldProps} />;
   };
 
   const renderFileds = (actionKey: string, stepIndex: number) => {
     const actionConfig = getOptionByKey(actionKey);
 
     if (!!actionConfig && actionConfig.fields && actionConfig.fields.length) {
-      return (
-        <span className="step__params">
-          {actionConfig.fields.map(renderActionField.bind(null, stepIndex))}
-        </span>
-      );
+      return <span className="step__params">{actionConfig.fields.map(renderActionField.bind(null, stepIndex))}</span>;
     }
   };
 
   const renderStepAdditionals = (index: number) => {
     if (!isEmpty(stepsConfig[index])) {
-      const action = (stepsConfig[index].action);
+      const action = stepsConfig[index].action;
 
       if (!!action) {
         return hasFields(action) && renderFileds(action, index);
@@ -129,11 +119,9 @@ const Steps: React.FC = () => {
   return (
     <div className="steps">
       Steps
-
       <button className="steps__add-btn" onClick={() => addStep()}>
-          Add a step
+        Add a step
       </button>
-
       {stepsConfig.map(renderStep)}
     </div>
   );

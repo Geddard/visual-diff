@@ -5,19 +5,19 @@ import React, { useEffect, useState } from "react";
 import "./TestRunner.css";
 
 interface ITestScenario {
-    action: string;
-    value: string;
-    crop: boolean;
-    cropTarget: string;
+  action: string;
+  value: string;
+  crop: boolean;
+  cropTarget: string;
 }
 
 interface ITest {
-    name: string;
-    url: string;
-    scenarios: ITestScenario[];
-    blockImagesChecked: boolean;
-    fullPageChecked: boolean;
-    takeResultScreenshot: boolean;
+  name: string;
+  url: string;
+  scenarios: ITestScenario[];
+  blockImagesChecked: boolean;
+  fullPageChecked: boolean;
+  takeResultScreenshot: boolean;
 }
 
 const TestRunner: React.FC = () => {
@@ -42,7 +42,8 @@ const TestRunner: React.FC = () => {
             }
           }
         }
-     `}).then((res: any) => {
+     `
+      }).then((res: any) => {
         setTestList(res.data.tests);
         setTestsFetched(true);
       });
@@ -55,11 +56,11 @@ const TestRunner: React.FC = () => {
         ---------------------------------
         <div>Test Name: {test.name}</div>
         <div>Initial URL: {test.url}</div>
-        <br/>
+        <br />
         {renderScenarios(test)}
-        <br/>
+        <br />
         <div>
-          Options: <br/>
+          Options: <br />
           <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
           <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
           <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
@@ -73,13 +74,13 @@ const TestRunner: React.FC = () => {
     if (test.scenarios) {
       return (
         <div>
-          Steps: <br/>
+          Steps: <br />
           {test.scenarios.map((scenario: ITestScenario, index: number) => {
             return (
               <div key={index}>
                 <div className="test-step">
                   ACTION: {scenario.action}
-                  <br/>
+                  <br />
                   {scenario.value ? "Value: " + scenario.value : null}
                 </div>
               </div>
@@ -92,20 +93,15 @@ const TestRunner: React.FC = () => {
 
   const runTest = (test: ITest) => {
     Axios.post("/api/shoot", {
-        steps: test.scenarios,
-        testName: test.name,
-        testUrl: test.url,
-    })
-    .then(() => {
-        alert("done");
+      steps: test.scenarios,
+      testName: test.name,
+      testUrl: test.url
+    }).then(() => {
+      alert("done");
     });
   };
 
-  return (
-    <div className="test-list">
-      {testList.map(renderTest)}
-    </div>
-  );
+  return <div className="test-list">{testList.map(renderTest)}</div>;
 };
 
 export default TestRunner;

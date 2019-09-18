@@ -1,7 +1,7 @@
 import axios from "axios";
 import remove from "lodash-es/remove";
 import without from "lodash-es/without";
-import React, { useEffect, useState  } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Differ.css";
 
@@ -21,15 +21,16 @@ const Differ: React.FC = () => {
   const [imagesList, setImagesList] = useState();
 
   useEffect(() => {
-    axios.get("/api/images")
-      .then((response: any) => {
-        if (response.data.length) {
-          setImagesReady(true);
-          setImagesList(remove(response.data, (image: string) => {
+    axios.get("/api/images").then((response: any) => {
+      if (response.data.length) {
+        setImagesReady(true);
+        setImagesList(
+          remove(response.data, (image: string) => {
             return image.indexOf("diff") === -1;
-          }));
-        }
-      });
+          })
+        );
+      }
+    });
   }, []);
 
   const renderContent = () => {
@@ -38,9 +39,7 @@ const Differ: React.FC = () => {
     if (diffReady) {
       content = (
         <div className="differ-form">
-          <div>
-            {"Difference in pixels " + diffResult}
-          </div>
+          <div>{"Difference in pixels " + diffResult}</div>
           {renderImg(`${sourceUrl.replace(".jpg", "")}-${compareUrl.replace(".jpg", "")}-diff.png`)}
         </div>
       );
@@ -69,16 +68,19 @@ const Differ: React.FC = () => {
 
   const renderDiffBtn = () => {
     if (sourceSelected && compareSelected) {
-      return <button className="diff-btn" onClick={() => doDiff()}>Diff it</button>
+      return (
+        <button className="diff-btn" onClick={() => doDiff()}>
+          Diff it
+        </button>
+      );
     }
   };
 
   const doDiff = () => {
-    axios.post("/api/compare", {sourceUrl, compareUrl})
-      .then((res) => {
-        setDiffReady(true);
-        setDiffResult(res.data.diffResult);
-      });
+    axios.post("/api/compare", { sourceUrl, compareUrl }).then(res => {
+      setDiffReady(true);
+      setDiffResult(res.data.diffResult);
+    });
   };
 
   const renderCompareTo = () => {
@@ -88,14 +90,12 @@ const Differ: React.FC = () => {
       if (imagesToCompare.length) {
         return (
           <div className="source-selector">
-            <p>
-              Compare To
-            </p>
+            <p>Compare To</p>
             <Select
-                className="differ__img-picker"
-                options={imagesToCompare}
-                onChangeHandler={selectCompareImageHandler}
-              />
+              className="differ__img-picker"
+              options={imagesToCompare}
+              onChangeHandler={selectCompareImageHandler}
+            />
             {compareSelected ? renderImg(compareUrl) : null}
           </div>
         );
@@ -105,12 +105,7 @@ const Differ: React.FC = () => {
 
   const renderSourceList = () => {
     if (imagesReady) {
-
-      return <Select
-                className="differ__img-picker"
-                options={imagesList || []}
-                onChangeHandler={selectImageHandler}
-              />;
+      return <Select className="differ__img-picker" options={imagesList || []} onChangeHandler={selectImageHandler} />;
     }
   };
 
@@ -125,7 +120,7 @@ const Differ: React.FC = () => {
   };
 
   const renderImg = (img: string) => {
-    return <img className="differ__img-displayed" src={`/${img}`} alt={img}/>
+    return <img className="differ__img-displayed" src={`/${img}`} alt={img} />;
   };
 
   return renderContent();

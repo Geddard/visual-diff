@@ -14,14 +14,17 @@ const App: React.FC = () => {
   const OPTIONS = {
     DIFFER: "Differ",
     SAVED_TESTS: "Saved tests",
-    SCREENSHOOTER: "Screenshooter",
+    SCREENSHOOTER: "Screenshooter"
   };
   const defaultForm = OPTIONS.SCREENSHOOTER;
 
   const [activeForm, setActiveForm] = useState(defaultForm);
   const [steps, setSteps] = useState([]);
 
-  const stepsContextValue = useMemo(() => ({ steps, setSteps }), [steps, setSteps]);
+  const stepsContextValue = useMemo(() => ({ steps, setSteps }), [
+    steps,
+    setSteps
+  ]);
 
   const handleTogglerClick = (option: string) => {
     setActiveForm(option);
@@ -32,10 +35,10 @@ const App: React.FC = () => {
 
     if (activeForm === OPTIONS.SCREENSHOOTER) {
       formToRender = (
-          <StepsContext.Provider value={stepsContextValue}>
-            <Screenshooter />
-          </StepsContext.Provider>
-        );
+        <StepsContext.Provider value={stepsContextValue}>
+          <Screenshooter />
+        </StepsContext.Provider>
+      );
     } else if (activeForm === OPTIONS.DIFFER) {
       formToRender = <Differ />;
     } else if (activeForm === OPTIONS.SAVED_TESTS) {

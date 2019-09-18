@@ -12,24 +12,13 @@ interface ICheckboxProps {
   customClassName?: string;
 }
 
-const Checkbox: React.FC<ICheckboxProps> = ({
-  name,
-  label,
-  setter,
-  customClassName,
-}) => {
-
+const Checkbox: React.FC<ICheckboxProps> = ({ name, label, setter, customClassName }) => {
   return (
     <div className={classnames("checkbox", customClassName)}>
       <label htmlFor={name} className="checkbox__label">
         {label}
       </label>
-      <input
-        type="checkbox"
-        name={name}
-        id={name}
-        onChange={(e) => setter(e.target.checked)}
-      />
+      <input type="checkbox" name={name} id={name} onChange={e => setter(e.target.checked)} />
     </div>
   );
 };

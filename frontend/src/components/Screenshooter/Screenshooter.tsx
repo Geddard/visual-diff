@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState  } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "./Screenshooter.css";
 
@@ -29,8 +29,7 @@ const Screenshooter: React.FC = () => {
 
   useEffect(() => {
     if (!puppetReady) {
-      axios.post("/api/init", {})
-      .then(() => {
+      axios.post("/api/init", {}).then(() => {
         setPuppetReady(true);
       });
     }
@@ -56,16 +55,15 @@ const Screenshooter: React.FC = () => {
       steps,
       takeResultScreenshot,
       testName,
-      testUrl,
+      testUrl
     };
 
-    axios.post("/api/shoot", config)
-      .then((res) => {
-        setIsDone(true);
-        setLoading(false);
-        setCacheKey(new Date().getTime());
-        setEvidence(res.data);
-      });
+    axios.post("/api/shoot", config).then(res => {
+      setIsDone(true);
+      setLoading(false);
+      setCacheKey(new Date().getTime());
+      setEvidence(res.data);
+    });
   };
 
   const save = () => {
@@ -75,21 +73,18 @@ const Screenshooter: React.FC = () => {
       steps,
       takeResultScreenshot,
       testName,
-      testUrl,
+      testUrl
     };
 
-    axios.post("/api/save", config)
-      .then((res) => {
-        alert(res);
-      });
+    axios.post("/api/save", config).then(res => {
+      alert(res);
+    });
   };
 
   const renderImage = (image: string, index: number) => {
     return (
       <div className="screenshot-wrapper" key={index}>
-        <span className="screenshot-title">
-          {image.split(".jpg")[0]}
-        </span>
+        <span className="screenshot-title">{image.split(".jpg")[0]}</span>
         <img
           className="screenshot"
           src={`/${image}?cacheKey=${cacheKey}`}
@@ -102,26 +97,21 @@ const Screenshooter: React.FC = () => {
 
   const renderEvidence = () => {
     if (isDone && evidence.length) {
-      return (
-        <div className="screenshot-gallery">
-          {evidence.map(renderImage)}
-        </div>
-      );
+      return <div className="screenshot-gallery">{evidence.map(renderImage)}</div>;
     }
   };
 
   return (
     <div className="screenshooter-form">
-
-      <Input title="Test Name" value={testName} setter={setTestName}/>
-      <Input title="URL" value={testUrl} setter={setTestUrl}/>
+      <Input title="Test Name" value={testName} setter={setTestName} />
+      <Input title="URL" value={testUrl} setter={setTestUrl} />
 
       <Steps />
 
-      <br/>
+      <br />
 
       <button className="screenshooter-btn" onClick={shoot}>
-        Run { steps.length ? "tasks" : "task" }
+        Run {steps.length ? "tasks" : "task"}
       </button>
 
       <button className="screenshooter-btn" onClick={save}>

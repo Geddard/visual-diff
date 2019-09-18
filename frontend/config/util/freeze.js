@@ -1,5 +1,6 @@
-const freeze = async (page) => {
-    await page.addStyleTag({ content: `
+const freeze = async page => {
+  await page.addStyleTag({
+    content: `
         <style>
             *, *::before, *::after {
                 -moz-transition: none !important;
@@ -8,7 +9,8 @@ const freeze = async (page) => {
                 animation: none !important;
             }
         </style>
-    ` });
+    `
+  });
 };
 
 module.exports = freeze;

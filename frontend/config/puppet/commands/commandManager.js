@@ -1,11 +1,8 @@
-const commandsConfig = require('./commandsConfig')();
+const commandsConfig = require("./commandsConfig")();
 
-module.exports = (page) => {
+module.exports = page => {
   let processedCommands = {};
-  const actionsNotRegistered = [
-    'SCREENSHOT',
-    'WAIT'
-  ];
+  const actionsNotRegistered = ["SCREENSHOT", "WAIT"];
   const commands = commandsConfig.commands(page);
   const commandWrapper = async (config, command, shouldSetLastAction) => {
     const results = await commands[command](config);
@@ -14,13 +11,13 @@ module.exports = (page) => {
     commandsConfig.updateLastAction(lastAction);
 
     return results;
-  }
+  };
 
   for (const command in commands) {
     if (commands.hasOwnProperty(command)) {
       const shouldSetLastAction = actionsNotRegistered.indexOf(command) === -1;
 
-      processedCommands[command] = (config) => commandWrapper(config, command, shouldSetLastAction);
+      processedCommands[command] = config => commandWrapper(config, command, shouldSetLastAction);
     }
   }
 
