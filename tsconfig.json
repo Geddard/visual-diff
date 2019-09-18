@@ -19,6 +19,6 @@
     "jsx": "preserve"
   },
   "include": [
-    "src"
+    "frontend/**/*.ts"
   ]
 }

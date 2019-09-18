@@ -1,33 +1,36 @@
-const pptr = require("puppeteer");
-const bodyParser = require("body-parser");
-const freeze = require("../util/freeze");
-const blockImages = require("../util/blockImages");
-const fs = require("fs");
-const commandManager = require("./commands/commandManager");
+import { json } from "body-parser";
+import { IRouter } from "express-serve-static-core";
+import { readdir, unlinkSync } from "fs";
+import { Browser, launch } from "puppeteer";
+import blockImages from "../util/blockImages";
+import freeze from "../util/freeze";
+import commandManager from "./commands/commandManager";
 
-const checkForExistingFile = async fileName => {
-  fs.readdir("./public", (error, files) => {
+const checkForExistingFile = async (fileName: string) => {
+  readdir("./public", (error, files) => {
     files.forEach(file => {
       if (file.indexOf(`./public/${fileName}.jpg`) !== -1) {
-        fs.unlinkSync(file);
+        unlinkSync(file);
       }
     });
   });
 };
 
-let browser;
+let browser: Browser;
 
 const init = async config => {
-  browser = await pptr.launch({
+  browser = await launch({
     defaultViewport: {
-      width: config.width || 1360,
-      height: config.height || 768
+      height: config.height || 768,
+      width: config.width || 1360
     }
   });
 };
 
-const close = async config => {
-  (await browser) && browser.close && browser.close();
+const close = async () => {
+  if (browser && browser.close) {
+    await browser.close();
+  }
 };
 
 const shoot = async config => {
@@ -81,8 +84,8 @@ const trySomething = async (res, tryThis, ifItfails) => {
   }
 };
 
-module.exports = app => {
-  app.post("/api/init", bodyParser.json(), async (req, res) => {
+export default (app: IRouter) => {
+  app.post("/api/init", json(), async (req, res) => {
     trySomething(
       res,
       async () => {
@@ -100,7 +103,7 @@ module.exports = app => {
     res.json("Puppet closed");
   });
 
-  app.post("/api/shoot", bodyParser.json(), async (req, res) => {
+  app.post("/api/shoot", json(), async (req, res) => {
     trySomething(
       res,
       async () => {
@@ -114,7 +117,7 @@ module.exports = app => {
   });
 
   app.get("/api/images", (req, res) => {
-    fs.readdir("./public", (error, files) => {
+    readdir("./public", (error, files) => {
       const images = [];
 
       files.forEach(file => {

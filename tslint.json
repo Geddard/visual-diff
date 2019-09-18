@@ -14,7 +14,8 @@
             "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
         },
         "trailing-comma": false,
-        "arrow-parens": false
+        "arrow-parens": false,
+        "radix": false
     },
     "jsRules": {
         "max-line-length": {
