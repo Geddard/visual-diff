@@ -15,13 +15,22 @@ const checkForExistingFile = async (fileName) => {
     });
 };
 
-const shoot = async (config) => {
-    const browser = await pptr.launch({
+let browser;
+
+const init = async (config) => {
+    browser = await pptr.launch({
         defaultViewport: {
             width: config.width || 1360,
             height: config.height || 768
         }
     });
+};
+
+const close = async (config) => {
+    await browser && browser.close && browser.close();
+};
+
+const shoot = async (config) => {
     const page = await browser.newPage();
     const commands = commandManager(page);
     const evidence = [];
@@ -61,19 +70,48 @@ const shoot = async (config) => {
         }
     }
 
-    await browser.close();
-
     return evidence;
 };
 
+const trySomething = async (res, tryThis, ifItfails) => {
+    try {
+        await tryThis();
+    } catch (error) {
+        ifItfails();
+        res.status(500).json(`Something went wrong: ${error}`, )
+    };
+};
+
 module.exports = (app) => {
+    app.post('/api/init', bodyParser.json(), async (req, res) => {
+        trySomething(
+            res,
+            async () => {
+                await init(req.body);
+                res.json("Puppet ready")
+            },
+            () => {
+                close();
+            }
+        );
+    });
+
+    app.get('/api/close', (req, res) => {
+        close();
+        res.json("Puppet closed");
+    });
+
     app.post('/api/shoot', bodyParser.json(), async (req, res) => {
-        try {
-            const evidence = await shoot(req.body);
-            res.json(evidence);
-        } catch (error) {
-            res.status(500).json(`Something went wrong: ${error}`, )
-        };
+        trySomething(
+            res,
+            async () => {
+                const evidence = await shoot(req.body);
+                res.json(evidence)
+            },
+            () => {
+                close();
+            }
+        );
     });
 
     app.get('/api/images', (req, res) => {

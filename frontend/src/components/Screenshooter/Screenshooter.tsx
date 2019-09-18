@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState  } from "react";
+import React, { useContext, useEffect, useState  } from "react";
 
 import "./Screenshooter.css";
 
@@ -24,6 +24,27 @@ const Screenshooter: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const steps = useContext(StepsContext).steps;
+
+  const [puppetReady, setPuppetReady] = useState(false);
+
+  useEffect(() => {
+    if (!puppetReady) {
+      axios.post("/api/init", {})
+      .then(() => {
+        setPuppetReady(true);
+      });
+    }
+  }, [puppetReady]);
+
+  useEffect(() => {
+    const cleanup = () => {
+      axios.get("/api/close");
+      window.removeEventListener("beforeunload", cleanup);
+    };
+
+    window.addEventListener("beforeunload", cleanup);
+    return cleanup;
+  }, []);
 
   const shoot = () => {
     setIsDone(false);
