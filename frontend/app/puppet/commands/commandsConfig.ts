@@ -38,8 +38,8 @@ export default (): ICommandsConfig => {
         },
 
         WAIT: async (config: any) => {
-          if (parseInt(config.value)) {
-            await page.waitFor(parseInt(config.value));
+          if (parseInt(config.value, 2)) {
+            await page.waitFor(parseInt(config.value, 2));
           } else {
             await page.waitFor(() => !!document.querySelector(config.value), config.value);
           }

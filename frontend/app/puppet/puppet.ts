@@ -1,3 +1,4 @@
+import { json } from "body-parser";
 import { IRouter } from "express-serve-static-core";
 import { readdir, unlinkSync } from "fs";
 import { Browser, launch } from "puppeteer";
@@ -91,7 +92,7 @@ const trySomething = async (res: any, tryThis: any, ifItfails: any) => {
 };
 
 export default (app: IRouter) => {
-  app.post("/init", async (req, res) => {
+  app.post("/init", json(), async (req, res) => {
     trySomething(
       res,
       async () => {
@@ -109,7 +110,7 @@ export default (app: IRouter) => {
     res.json("Puppet closed");
   });
 
-  app.post("/shoot", async (req, res) => {
+  app.post("/shoot", json(), async (req, res) => {
     trySomething(
       res,
       async () => {
@@ -122,7 +123,7 @@ export default (app: IRouter) => {
     );
   });
 
-  app.get("/api/images", (req, res) => {
+  app.get("/images", json(), (req, res) => {
     readdir("./public", (error, files) => {
       const images: string[] = [];
 

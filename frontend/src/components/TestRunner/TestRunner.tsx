@@ -23,6 +23,25 @@ interface ITest {
 const TestRunner: React.FC = () => {
   const [testList, setTestList] = useState([]);
   const [testsFetched, setTestsFetched] = useState(false);
+  const [puppetReady, setPuppetReady] = useState(false);
+
+  useEffect(() => {
+    if (!puppetReady) {
+      Axios.post("/init", {}).then(() => {
+        setPuppetReady(true);
+      });
+    }
+  }, [puppetReady]);
+
+  useEffect(() => {
+    const cleanup = () => {
+      Axios.get("/close");
+      window.removeEventListener("beforeunload", cleanup);
+    };
+
+    window.addEventListener("beforeunload", cleanup);
+    return cleanup;
+  }, []);
 
   useEffect(() => {
     if (!testsFetched) {

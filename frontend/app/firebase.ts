@@ -1,35 +1,35 @@
-const firebase = require("firebase");
-const bodyParser = require("body-parser");
-const fs = require("fs");
-require("firebase/database");
-require("firebase/storage");
+import firebase from "firebase";
+import "firebase/database";
+import "firebase/storage";
+import fs from "fs";
 
 // Workaround for firebase not having this installed, beacuse reasons.
+// @ts-ignore
 global.XMLHttpRequest = require("xhr2");
 
 const firebaseConfig = {
   apiKey: "AIzaSyCIVB0g51AzDFcgeOvx7dpQeKKPUqoDbSs",
+  appId: "1:586736836008:web:9f12fe0ae660eabf",
   authDomain: "visual-diff.firebaseapp.com",
   databaseURL: "https://visual-diff.firebaseio.com",
-  projectId: "visual-diff",
-  storageBucket: "gs://visual-diff.appspot.com/",
   messagingSenderId: "586736836008",
-  appId: "1:586736836008:web:9f12fe0ae660eabf"
+  projectId: "visual-diff",
+  storageBucket: "gs://visual-diff.appspot.com/"
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-const save = config => {
+const save = (config: any) => {
   firebaseApp
     .database()
     .ref("/tests")
     .push({
-      name: config.testName,
-      url: config.testUrl,
-      scenarios: config.steps,
-      fullPageChecked: config.fullPageChecked,
       blockImagesChecked: config.blockImagesChecked,
-      takeResultScreenshot: config.takeResultScreenshot
+      fullPageChecked: config.fullPageChecked,
+      name: config.testName,
+      scenarios: config.steps,
+      takeResultScreenshot: config.takeResultScreenshot,
+      url: config.testUrl
     });
 };
 
@@ -42,15 +42,15 @@ const upload = () => {
 
   imageRef
     .put(jpegData)
-    .then(function(snapshot) {
+    .then((snapshot: any) => {
       console.log("Uploaded an array!");
     })
-    .catch(error => console.log("Error", error));
+    .catch((error: any) => console.log("Error", error));
 };
 
-exports.firebaseApp = firebaseApp;
-exports.setFirebaseEndpoint = app => {
-  app.post("/save", bodyParser.json(), (req, res) => {
+export { firebaseApp };
+export const setFirebaseEndpoint = (app: any) => {
+  app.post("/save", (req: any, res: any) => {
     save(req.body);
     res.json("Saved");
   });

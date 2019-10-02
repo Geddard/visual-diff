@@ -1,6 +1,7 @@
-const expressGql = require("express-graphql");
-const { buildSchema } = require("graphql");
-const firebase = require("./firebase");
+import expressGql from "express-graphql";
+// @ts-ignore
+import { buildSchema } from "graphql";
+import { firebaseApp } from "./firebase";
 
 const schema = buildSchema(`
   type Scenario {
@@ -26,7 +27,7 @@ const schema = buildSchema(`
 
 const root = {
   tests: () =>
-    firebase.firebaseApp
+    firebaseApp
       .database()
       .ref("/tests")
       .once("value")
@@ -34,13 +35,13 @@ const root = {
       .then(val => Object.keys(val).map(key => val[key]))
 };
 
-module.exports = app => {
+export default (app: any) => {
   app.use(
     "/gql",
     expressGql({
-      schema: schema,
+      graphiql: true,
       rootValue: root,
-      graphiql: true
+      schema
     })
   );
 };

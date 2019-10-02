@@ -1,3 +1,3 @@
 {
-  "routes": ["/init", "/close", "/images", "/images", "/shoot"]
+  "routes": ["/init", "/close", "/images", "/images", "/shoot", "/save", "/gql", "/compare"]
 }

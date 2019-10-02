@@ -1,11 +1,10 @@
-const bodyParser = require("body-parser");
-const fs = require("fs");
-const PNG = require("pngjs").PNG;
-const JPEG = require("jpeg-js");
+import fs from "fs";
+import JPEG from "jpeg-js";
+import { PNG } from "pngjs";
 
-const pixelmatch = require("pixelmatch");
+import pixelmatch from "pixelmatch";
 
-const compare = (sourceUrl, compareUrl) => {
+const compare = (sourceUrl: string, compareUrl: string) => {
   const img1 = JPEG.decode(fs.readFileSync(`./public/${sourceUrl}`));
   const img2 = JPEG.decode(fs.readFileSync(`./public/${compareUrl}`));
   const { width, height } = img1;
@@ -21,8 +20,8 @@ const compare = (sourceUrl, compareUrl) => {
   return diffPixels;
 };
 
-module.exports = app => {
-  app.post("/compare", bodyParser.json(), (req, res) => {
+export default (app: any) => {
+  app.post("/compare", (req: any, res: any) => {
     const diffResult = compare(req.body.sourceUrl, req.body.compareUrl);
     res.json({
       diffResult
