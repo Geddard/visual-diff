@@ -90,7 +90,7 @@
   "scripts": {
     "clean": "rm public/*.png",
     "start:dev": "nodemon scripts/start.js",
-    "start:app": "ts-node-dev app/app.ts",
+    "start:app": "ts-node-dev api/app.ts",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },
