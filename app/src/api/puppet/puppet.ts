@@ -46,7 +46,7 @@ const shoot = async (config: any) => {
   }
 
   if (commands.NAVIGATE !== undefined) {
-    await commands.NAVIGATE({ url: config.testUrl });
+    await commands.NAVIGATE({ value: config.testUrl });
   }
 
   await freeze(page);

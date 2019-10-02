@@ -38,8 +38,8 @@ export default (): ICommandsConfig => {
         },
 
         WAIT: async (config: any) => {
-          if (parseInt(config.value, 2)) {
-            await page.waitFor(parseInt(config.value, 2));
+          if (parseInt(config.value, 0)) {
+            await page.waitFor(parseInt(config.value, 0));
           } else {
             await page.waitFor(() => !!document.querySelector(config.value), config.value);
           }
@@ -50,7 +50,7 @@ export default (): ICommandsConfig => {
         },
 
         NAVIGATE: async (config: any) => {
-          await page.goto(`https://${config.url}`, { waitUntil: "networkidle0" });
+          await page.goto(`https://${config.value}`, { waitUntil: "networkidle0" });
         },
 
         REPLACE: async (config: any) => {
