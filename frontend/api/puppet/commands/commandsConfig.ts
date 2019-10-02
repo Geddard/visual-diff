@@ -55,7 +55,7 @@ export default (): ICommandsConfig => {
 
         REPLACE: async (config: any) => {
           await page.evaluate((replaceConfig: any) => {
-            document.querySelector(replaceConfig.replaceTarget).innerHTML = config.value;
+            document.querySelector(replaceConfig.replaceTarget).innerHTML = replaceConfig.value;
           }, config);
         },
 
