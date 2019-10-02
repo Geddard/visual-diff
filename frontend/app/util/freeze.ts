@@ -1,4 +1,6 @@
-const freeze = async page => {
+import { Page } from "puppeteer";
+
+export default async (page: Page) => {
   await page.addStyleTag({
     content: `
         <style>
@@ -12,5 +14,3 @@ const freeze = async page => {
     `
   });
 };
-
-module.exports = freeze;

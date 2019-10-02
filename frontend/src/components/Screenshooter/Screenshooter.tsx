@@ -29,7 +29,7 @@ const Screenshooter: React.FC = () => {
 
   useEffect(() => {
     if (!puppetReady) {
-      axios.post("/api/init", {}).then(() => {
+      axios.post("/init", {}).then(() => {
         setPuppetReady(true);
       });
     }
@@ -37,7 +37,7 @@ const Screenshooter: React.FC = () => {
 
   useEffect(() => {
     const cleanup = () => {
-      axios.get("/api/close");
+      axios.get("/close");
       window.removeEventListener("beforeunload", cleanup);
     };
 
@@ -58,7 +58,7 @@ const Screenshooter: React.FC = () => {
       testUrl
     };
 
-    axios.post("/api/shoot", config).then(res => {
+    axios.post("/shoot", config).then(res => {
       setIsDone(true);
       setLoading(false);
       setCacheKey(new Date().getTime());
@@ -76,7 +76,7 @@ const Screenshooter: React.FC = () => {
       testUrl
     };
 
-    axios.post("/api/save", config).then(res => {
+    axios.post("/save", config).then(res => {
       alert(res);
     });
   };

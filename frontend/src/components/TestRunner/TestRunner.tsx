@@ -92,7 +92,7 @@ const TestRunner: React.FC = () => {
   };
 
   const runTest = (test: ITest) => {
-    Axios.post("/api/shoot", {
+    Axios.post("/shoot", {
       steps: test.scenarios,
       testName: test.name,
       testUrl: test.url

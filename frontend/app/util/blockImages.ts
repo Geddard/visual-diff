@@ -1,4 +1,6 @@
-const blockImages = async page => {
+import { Page } from "puppeteer";
+
+export default async (page: Page) => {
   page.on("request", request => {
     if ("image".indexOf(request.resourceType()) !== -1) {
       request.abort();
@@ -7,5 +9,3 @@ const blockImages = async page => {
     }
   });
 };
-
-module.exports = blockImages;

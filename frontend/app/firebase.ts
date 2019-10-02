@@ -50,7 +50,7 @@ const upload = () => {
 
 exports.firebaseApp = firebaseApp;
 exports.setFirebaseEndpoint = app => {
-  app.post("/api/save", bodyParser.json(), (req, res) => {
+  app.post("/save", bodyParser.json(), (req, res) => {
     save(req.body);
     res.json("Saved");
   });

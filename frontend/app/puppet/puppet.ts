@@ -1,36 +1,39 @@
-const pptr = require("puppeteer");
-const bodyParser = require("body-parser");
-const freeze = require("../util/freeze");
-const blockImages = require("../util/blockImages");
-const fs = require("fs");
-const commandManager = require("./commands/commandManager");
+import { IRouter } from "express-serve-static-core";
+import { readdir, unlinkSync } from "fs";
+import { Browser, launch } from "puppeteer";
+import blockImages from "../util/blockImages";
+import freeze from "../util/freeze";
+import commandManager from "./commands/commandManager";
+import { ICommands } from "./commands/commandsConfig";
 
-const checkForExistingFile = async fileName => {
-  fs.readdir("./public", (error, files) => {
+const checkForExistingFile = async (fileName: string) => {
+  readdir("./public", (error, files) => {
     files.forEach(file => {
       if (file.indexOf(`./public/${fileName}.jpg`) !== -1) {
-        fs.unlinkSync(file);
+        unlinkSync(file);
       }
     });
   });
 };
 
-let browser;
+let browser: Browser;
 
-const init = async config => {
-  browser = await pptr.launch({
+const init = async (config: any) => {
+  browser = await launch({
     defaultViewport: {
-      width: config.width || 1360,
-      height: config.height || 768
+      height: config.height || 768,
+      width: config.width || 1360
     }
   });
 };
 
-const close = async config => {
-  (await browser) && browser.close && browser.close();
+const close = async () => {
+  if (browser && browser.close) {
+    await browser.close();
+  }
 };
 
-const shoot = async config => {
+const shoot = async (config: any) => {
   const page = await browser.newPage();
   const commands = commandManager(page);
   const evidence = [];
@@ -40,28 +43,34 @@ const shoot = async config => {
     await blockImages(page);
   }
 
-  await commands.NAVIGATE({ url: config.testUrl });
+  if (commands.NAVIGATE !== undefined) {
+    await commands.NAVIGATE({ url: config.testUrl });
+  }
 
   await freeze(page);
 
   if (config.steps && config.steps.length) {
     for (const step of config.steps) {
-      const action = step.action;
+      const action: keyof ICommands = step.action;
       const stepConfig = Object.assign({}, step, {
         testName: config.testName
       });
 
-      const results = await commands[action](stepConfig);
+      const commandConfig = commands[action];
 
-      if (results && typeof results === "string") {
-        evidence.push(results);
+      if (commandConfig !== undefined) {
+        const results = await commandConfig(stepConfig);
+
+        if (results && typeof results === "string") {
+          evidence.push(results);
+        }
       }
     }
   }
 
   await checkForExistingFile(config.testName);
 
-  if (config.takeResultScreenshot) {
+  if (config.takeResultScreenshot && commands.SCREENSHOT !== undefined) {
     const result = await commands.SCREENSHOT(config);
 
     if (result && typeof result === "string") {
@@ -72,7 +81,7 @@ const shoot = async config => {
   return evidence;
 };
 
-const trySomething = async (res, tryThis, ifItfails) => {
+const trySomething = async (res: any, tryThis: any, ifItfails: any) => {
   try {
     await tryThis();
   } catch (error) {
@@ -81,8 +90,8 @@ const trySomething = async (res, tryThis, ifItfails) => {
   }
 };
 
-module.exports = app => {
-  app.post("/api/init", bodyParser.json(), async (req, res) => {
+export default (app: IRouter) => {
+  app.post("/init", async (req, res) => {
     trySomething(
       res,
       async () => {
@@ -95,12 +104,12 @@ module.exports = app => {
     );
   });
 
-  app.get("/api/close", (req, res) => {
+  app.get("/close", (req, res) => {
     close();
     res.json("Puppet closed");
   });
 
-  app.post("/api/shoot", bodyParser.json(), async (req, res) => {
+  app.post("/shoot", async (req, res) => {
     trySomething(
       res,
       async () => {
@@ -114,8 +123,8 @@ module.exports = app => {
   });
 
   app.get("/api/images", (req, res) => {
-    fs.readdir("./public", (error, files) => {
-      const images = [];
+    readdir("./public", (error, files) => {
+      const images: string[] = [];
 
       files.forEach(file => {
         if (/(.jpg)/.test(file)) {

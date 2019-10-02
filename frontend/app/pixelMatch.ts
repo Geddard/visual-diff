@@ -22,7 +22,7 @@ const compare = (sourceUrl, compareUrl) => {
 };
 
 module.exports = app => {
-  app.post("/api/compare", bodyParser.json(), (req, res) => {
+  app.post("/compare", bodyParser.json(), (req, res) => {
     const diffResult = compare(req.body.sourceUrl, req.body.compareUrl);
     res.json({
       diffResult

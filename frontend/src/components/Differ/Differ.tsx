@@ -21,7 +21,7 @@ const Differ: React.FC = () => {
   const [imagesList, setImagesList] = useState();
 
   useEffect(() => {
-    axios.get("/api/images").then((response: any) => {
+    axios.get("/images").then((response: any) => {
       if (response.data.length) {
         setImagesReady(true);
         setImagesList(
@@ -77,7 +77,7 @@ const Differ: React.FC = () => {
   };
 
   const doDiff = () => {
-    axios.post("/api/compare", { sourceUrl, compareUrl }).then(res => {
+    axios.post("/compare", { sourceUrl, compareUrl }).then(res => {
       setDiffReady(true);
       setDiffResult(res.data.diffResult);
     });
