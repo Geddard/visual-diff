@@ -9,7 +9,7 @@ const fs = require("fs");
 const proxyMiddleware = require("http-proxy-middleware");
 const protocol = process.env.HTTPS === "true" ? "https" : "http";
 const host = process.env.HOST || "0.0.0.0";
-const routes = require("../proxyRoutes.json").routes;
+const routes = require("./proxyRoutes.json").routes;
 
 module.exports = function(proxy, allowedHost) {
   return {

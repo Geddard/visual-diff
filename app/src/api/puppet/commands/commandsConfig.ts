@@ -1,18 +1,22 @@
 import { Page } from "puppeteer";
 
-type TCommandPromise = Promise<string | void>;
+type TCommandPromise = Promise<unknown>;
 
-export interface ICommands {
-  HOVER?: (config: any) => TCommandPromise;
-  CLICK?: (config: any) => TCommandPromise;
-  WAIT?: (config: any) => TCommandPromise;
-  ENTER_TEXT?: (config: any) => TCommandPromise;
-  NAVIGATE?: (config: any) => TCommandPromise;
-  REPLACE?: (config: any) => TCommandPromise;
-  REPLACE_ALL?: (config: any) => TCommandPromise;
-  HIDE?: (config: any) => TCommandPromise;
-  SCREENSHOT?: (config: any) => TCommandPromise;
+export enum COMMANDS_KEYS {
+  HOVER,
+  CLICK,
+  WAIT,
+  ENTER_TEXT,
+  NAVIGATE,
+  REPLACE,
+  REPLACE_ALL,
+  HIDE,
+  SCREENSHOT
 }
+
+export type ICommands = {
+  [key in keyof typeof COMMANDS_KEYS]: (config: any) => TCommandPromise;
+};
 
 export interface ICommandsConfig {
   updateLastAction: (newValue: string) => void;
@@ -86,6 +90,7 @@ export default (): ICommandsConfig => {
 
           if (config.crop && config.cropTarget) {
             const element = await page.$(config.cropTarget);
+
             if (element !== null) {
               await element.screenshot(ssConfig);
             }

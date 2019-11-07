@@ -4,8 +4,8 @@ import commandsConfig, { ICommands } from "./commandsConfig";
 
 const baseCommands = commandsConfig();
 
-export default (page: Page) => {
-  const processedCommands: ICommands = {};
+export default (page: Page): ICommands => {
+  const processedCommands = {};
   const actionsNotRegistered = ["SCREENSHOT", "WAIT"];
   const commands = baseCommands.commands(page);
   const commandWrapper = async (config: any, command: keyof ICommands, shouldSetLastAction: boolean) => {
@@ -25,10 +25,10 @@ export default (page: Page) => {
     if (commands.hasOwnProperty(command)) {
       const shouldSetLastAction = actionsNotRegistered.indexOf(command) === -1;
 
-      processedCommands[command as keyof ICommands] = (config: any) =>
+      (processedCommands as ICommands)[command] = (config: any) =>
         commandWrapper(config, command as keyof ICommands, shouldSetLastAction);
     }
   }
 
-  return processedCommands;
+  return processedCommands as ICommands;
 };

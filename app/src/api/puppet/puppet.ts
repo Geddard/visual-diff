@@ -1,10 +1,12 @@
 import { json } from "body-parser";
+import { Request, Response } from "express";
 import { IRouter } from "express-serve-static-core";
 import { readdir, unlinkSync } from "fs";
 import { Browser, launch } from "puppeteer";
 import { ROUTES } from "../routes/routes";
 import blockImages from "../util/blockImages";
 import freeze from "../util/freeze";
+import { trySomething } from "../util/try";
 import commandManager from "./commands/commandManager";
 import { ICommands } from "./commands/commandsConfig";
 
@@ -83,58 +85,31 @@ const shoot = async (config: any) => {
   return evidence;
 };
 
-const trySomething = async (res: any, tryThis: any, ifItfails: any) => {
-  try {
-    await tryThis();
-  } catch (error) {
-    ifItfails();
-    res.status(500).json(`Something went wrong: ${error}`);
-  }
+const tryInit = async (req: Request, res: Response) => {
+  const tryThis = async () => {
+    await init(req.body);
+    res.json("Puppet ready");
+  };
+
+  trySomething(res, tryThis, close);
+};
+
+const tryShoot = async (req: Request, res: Response) => {
+  const tryThis = async () => {
+    const evidence = await shoot(req.body);
+    res.json(evidence);
+  };
+
+  trySomething(res, tryThis, close);
+};
+
+const tryClose = async (req: Request, res: Response) => {
+  close();
+  res.json("Puppet closed");
 };
 
 export default (app: IRouter) => {
-  app.post(ROUTES.INIT, json(), async (req, res) => {
-    trySomething(
-      res,
-      async () => {
-        await init(req.body);
-        res.json("Puppet ready");
-      },
-      () => {
-        close();
-      }
-    );
-  });
-
-  app.get(ROUTES.CLOSE, (req, res) => {
-    close();
-    res.json("Puppet closed");
-  });
-
-  app.post(ROUTES.SHOOT, json(), async (req, res) => {
-    trySomething(
-      res,
-      async () => {
-        const evidence = await shoot(req.body);
-        res.json(evidence);
-      },
-      () => {
-        close();
-      }
-    );
-  });
-
-  app.get(ROUTES.IMAGES, json(), (req, res) => {
-    readdir("./public", (error, files) => {
-      const images: string[] = [];
-
-      files.forEach(file => {
-        if (/(.jpg)/.test(file)) {
-          images.push(file);
-        }
-      });
-
-      res.json(images);
-    });
-  });
+  app.post(ROUTES.INIT, json(), tryInit);
+  app.post(ROUTES.SHOOT, json(), tryShoot);
+  app.get(ROUTES.CLOSE, tryClose);
 };
