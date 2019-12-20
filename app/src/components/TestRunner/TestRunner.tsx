@@ -1,7 +1,7 @@
 import { createApolloFetch } from "apollo-fetch";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { ROUTES } from "../../api/routes/routes";
 import "./TestRunner.css";
 
 interface ITestScenario {
@@ -45,7 +45,7 @@ const TestRunner: React.FC = () => {
 
   useEffect(() => {
     if (!testsFetched) {
-      createApolloFetch({ uri: "/gql" })({
+      createApolloFetch({ uri: ROUTES.GQL })({
         query: `{
           tests {
             blockImagesChecked
@@ -80,9 +80,14 @@ const TestRunner: React.FC = () => {
         <br />
         <div>
           Options: <br />
-          <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
+          <div>
+            Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}
+          </div>
           <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
-          <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
+          <div>
+            Take final screenshot:{" "}
+            {test.takeResultScreenshot ? "enabled" : "disabled"}
+          </div>
         </div>
         <button onClick={() => runTest(test)}>Run test</button>
       </div>
