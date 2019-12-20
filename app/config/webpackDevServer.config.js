@@ -87,7 +87,7 @@ module.exports = function(proxy, allowedHost) {
         app.use(
           route,
           proxyMiddleware({
-            target: "http://localhost:5000"
+            target: "http://172.29.33.74:3003"
           })
         );
       }

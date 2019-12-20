@@ -8,7 +8,7 @@ import puppet from "./puppet/puppet";
 import { ROUTES } from "./routes/routes";
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3003;
 
 app.listen(port, () => {
   if (process.env.NODE_ENV !== "production") {

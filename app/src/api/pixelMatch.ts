@@ -1,8 +1,8 @@
+import { json } from "body-parser";
 import fs from "fs";
 import JPEG from "jpeg-js";
-import { PNG } from "pngjs";
-
 import pixelmatch from "pixelmatch";
+import { PNG } from "pngjs";
 import { ROUTES } from "./routes/routes";
 
 const compare = (sourceUrl: string, compareUrl: string) => {
@@ -22,7 +22,7 @@ const compare = (sourceUrl: string, compareUrl: string) => {
 };
 
 export default (app: any) => {
-  app.post(ROUTES.COMPARE, (req: any, res: any) => {
+  app.post(ROUTES.COMPARE, json(), (req: any, res: any) => {
     const diffResult = compare(req.body.sourceUrl, req.body.compareUrl);
     res.json({
       diffResult

@@ -5,14 +5,14 @@
 
 .field-container--inline {
   display: inline-flex;
+  align-items: center;
   width: 50%;
   margin: 0 50px;
-  align-items: center;
 }
 
 .input-label {
-  margin-right: 10px;
   width: 40%;
+  margin-right: 10px;
 }
 
 .input-box {

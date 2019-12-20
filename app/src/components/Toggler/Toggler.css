@@ -1,8 +1,8 @@
 .toggler {
   display: flex;
   justify-content: center;
-  height: 46px;
   width: 60%;
+  height: 46px;
   margin: 50px auto 0;
 }
 .toggler__wrapper {
@@ -15,8 +15,8 @@
 }
 
 .toggler__option {
-  height: 100%;
   flex: 1;
+  height: 100%;
 }
 
 .toggler__option--active {

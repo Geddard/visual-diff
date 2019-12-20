@@ -1,14 +1,11 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { ROUTES } from "../../api/routes/routes";
-
-import "./Screenshooter.css";
-
 import Checkbox from "../Checkbox/Checkbox";
 import Input from "../Input/Input";
 import Steps from "../Steps/Steps";
-
 import { StepsContext } from "../Steps/Steps.context";
+import "./Screenshooter.css";
 
 const Screenshooter: React.FC = () => {
   const [testName, setTestName] = useState("frontpage");
@@ -30,7 +27,7 @@ const Screenshooter: React.FC = () => {
 
   useEffect(() => {
     if (!puppetReady) {
-      axios.post(ROUTES.INIT, {}).then(() => {
+      axios.get(ROUTES.INIT, {}).then(() => {
         setPuppetReady(true);
       });
     }
@@ -59,7 +56,7 @@ const Screenshooter: React.FC = () => {
       testUrl
     };
 
-    axios.post(ROUTES.SHOOT, config).then(res => {
+    axios.get(ROUTES.SHOOT, { params: { ...config } }).then(res => {
       setIsDone(true);
       setLoading(false);
       setCacheKey(new Date().getTime());

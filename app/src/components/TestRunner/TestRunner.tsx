@@ -80,14 +80,9 @@ const TestRunner: React.FC = () => {
         <br />
         <div>
           Options: <br />
-          <div>
-            Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}
-          </div>
+          <div>Images blocked: {test.blockImagesChecked ? "enabled" : "disabled"}</div>
           <div>Full page: {test.fullPageChecked ? "enabled" : "disabled"}</div>
-          <div>
-            Take final screenshot:{" "}
-            {test.takeResultScreenshot ? "enabled" : "disabled"}
-          </div>
+          <div>Take final screenshot: {test.takeResultScreenshot ? "enabled" : "disabled"}</div>
         </div>
         <button onClick={() => runTest(test)}>Run test</button>
       </div>

@@ -1,19 +1,19 @@
 .app {
-  text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
   color: white;
+  font-size: calc(10px + 2vmin);
+  text-align: center;
+  background-color: #282c34;
 }
 
 .app-logo {
+  width: 100px;
+  margin: 50px 0;
   animation: app-logo-spin infinite 20s linear;
   pointer-events: none;
-  margin: 50px 0;
-  width: 100px;
   fill: red;
 }
 

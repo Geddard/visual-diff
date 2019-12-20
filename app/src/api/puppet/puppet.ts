@@ -53,8 +53,10 @@ const shoot = async (config: any) => {
 
   await freeze(page);
 
-  if (config.steps && config.steps.length) {
-    for (const step of config.steps) {
+  const steps = JSON.parse(config.steps);
+
+  if (steps && steps.length) {
+    for (const step of steps) {
       const action: keyof ICommands = step.action;
       const stepConfig = Object.assign({}, step, {
         testName: config.testName
@@ -96,7 +98,7 @@ const tryInit = async (req: Request, res: Response) => {
 
 const tryShoot = async (req: Request, res: Response) => {
   const tryThis = async () => {
-    const evidence = await shoot(req.body);
+    const evidence = await shoot(req.query);
     res.json(evidence);
   };
 
@@ -109,7 +111,7 @@ const tryClose = async (req: Request, res: Response) => {
 };
 
 export default (app: IRouter) => {
-  app.post(ROUTES.INIT, json(), tryInit);
-  app.post(ROUTES.SHOOT, json(), tryShoot);
+  app.get(ROUTES.INIT, json(), tryInit);
+  app.get(ROUTES.SHOOT, json(), tryShoot);
   app.get(ROUTES.CLOSE, tryClose);
 };

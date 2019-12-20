@@ -92,7 +92,16 @@ export default (): ICommandsConfig => {
             const element = await page.$(config.cropTarget);
 
             if (element !== null) {
-              await element.screenshot(ssConfig);
+              await element
+                .screenshot(ssConfig)
+                .then((any: any) => {
+                  console.log("initiated");
+                  return any;
+                })
+                .catch(e => {
+                  console.log(e);
+                  return e;
+                });
             }
           } else {
             await page.screenshot(ssConfig);

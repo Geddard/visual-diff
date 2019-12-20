@@ -1,6 +1,6 @@
 .differ-form {
-  width: 100%;
   display: flex;
+  width: 100%;
 }
 
 .differ__img-picker {
@@ -12,8 +12,8 @@
 
 .differ__img-displayed {
   max-width: 80%;
-  border: 1px solid white;
   margin: 20px 0 50px;
+  border: 1px solid white;
 }
 
 .differ-form .source-selector {

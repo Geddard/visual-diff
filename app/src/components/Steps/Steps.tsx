@@ -3,10 +3,8 @@ import isEmpty from "lodash-es/isEmpty";
 import set from "lodash-es/set";
 import uniqueId from "lodash-es/uniqueId";
 import React, { useContext, useState } from "react";
-import { getOptionByKey, hasFields, IStep, IStepField, options, tagTypes } from "./Steps.config";
-
 import Select from "../Select/Select";
-
+import { getOptionByKey, hasFields, IStep, IStepField, options, tagTypes } from "./Steps.config";
 import { StepsContext } from "./Steps.context";
 import "./Steps.css";
 
